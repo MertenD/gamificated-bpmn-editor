@@ -12,6 +12,9 @@ import {
     applyNodeChanges,
     applyEdgeChanges
 } from 'reactflow';
+import ColorChooserNode from "./modules/flow/nodes/ColorChooserNode";
+import TextInputNode from "./modules/flow/nodes/TextInputNode";
+import StartNode from "./modules/flow/nodes/StartNode";
 
 export type RFState = {
     nodes: Node[];
@@ -25,6 +28,11 @@ export type RFState = {
 export const useStore = create<RFState>((set, get) => ({
     nodes: [],
     edges: [],
+    nodeTypes: {
+        colorChooser: ColorChooserNode,
+        textInput: TextInputNode,
+        start: StartNode
+    },
     onNodesChange: (changes: NodeChange[]) => {
         set({
             nodes: applyNodeChanges(changes, get().nodes),
