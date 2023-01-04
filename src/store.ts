@@ -12,9 +12,10 @@ import {
     applyNodeChanges,
     applyEdgeChanges
 } from 'reactflow';
-import ColorChooserNode from "./modules/flow/nodes/ColorChooserNode";
-import TextInputNode from "./modules/flow/nodes/TextInputNode";
+import ActivityNode from "./modules/flow/nodes/ActivityNode";
 import StartNode from "./modules/flow/nodes/StartNode";
+import DecisionNode from "./modules/flow/nodes/DecisionNode";
+import EndNode from "./modules/flow/nodes/EndNode";
 
 export type RFState = {
     nodes: Node[];
@@ -22,16 +23,17 @@ export type RFState = {
     onNodesChange: OnNodesChange;
     onEdgesChange: OnEdgesChange;
     onConnect: OnConnect;
-    updateNodeColor: (nodeId: string, color: string) => void;
+    getNodeById: (nodeID: string) => Node | null
 };
 
 export const useStore = create<RFState>((set, get) => ({
     nodes: [],
     edges: [],
     nodeTypes: {
-        colorChooser: ColorChooserNode,
-        textInput: TextInputNode,
-        start: StartNode
+        textInput: ActivityNode,
+        start: StartNode,
+        end: EndNode,
+        decisionNode: DecisionNode
     },
     onNodesChange: (changes: NodeChange[]) => {
         set({
@@ -45,18 +47,17 @@ export const useStore = create<RFState>((set, get) => ({
     },
     onConnect: (connection: Connection) => {
         set({
-            edges: addEdge(connection, get().edges),
+            edges: addEdge(connection, get().edges)
         });
     },
-    updateNodeColor: (nodeId: string, color: string) => {
-        set({
-            nodes: get().nodes.map((node) => {
-                if (node.id === nodeId) {
-                    node.data = { ...node.data, color };
-                }
-                return node;
-            }),
-        });
+    getNodeById: (nodeId: string): Node | null => {
+        let resultNode = null
+        get().nodes.forEach((node) => {
+            if (node.id === nodeId) {
+                resultNode = node
+            }
+        })
+        return resultNode;
     },
 }));
 

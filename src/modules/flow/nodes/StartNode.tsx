@@ -13,8 +13,8 @@ export default function StartNode({ id, data}: NodeProps<StartNodeData>) {
 }
 
 export const startNodeShapeStyle = {
-    width: 50,
-    height: 50,
+    width: 30,
+    height: 30,
     backgroundColor: "white",
     borderRadius: "50%",
     border: "3px solid black"

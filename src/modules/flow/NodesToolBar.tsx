@@ -1,7 +1,8 @@
 import React from 'react';
-import {colorChooserShapeStyle} from "./nodes/ColorChooserNode";
-import {textInputShapeStyle} from "./nodes/TextInputNode";
+import {textInputShapeStyle} from "./nodes/ActivityNode";
 import {startNodeShapeStyle} from "./nodes/StartNode";
+import {decisionShapeStyle} from "./nodes/DecisionNode";
+import {endNodeShapeStyle} from "./nodes/EndNode";
 
 export default function NodesToolBar() {
     const onDragStart = (event: any, nodeType: String, nodeData: any) => {
@@ -21,17 +22,21 @@ export default function NodesToolBar() {
                 alignItems: 'center',
                 justifyContent: 'center',
             }}>
-                Start Node
+                Start
                 <div draggable style={{ ...startNodeShapeStyle,  marginBottom: 10 }} onDragStart={(event) =>
                     onDragStart(event, "start", {})
+                } />
+                End
+                <div draggable style={{ ...endNodeShapeStyle,  marginBottom: 10 }} onDragStart={(event) =>
+                    onDragStart(event, "end", {})
                 } />
                 Activity
                 <div draggable style={{ ...textInputShapeStyle, marginBottom: 10 }} onDragStart={(event) =>
                     onDragStart(event, "textInput", {})
                 } />
-                Color Chooser
-                <div draggable style={{ ...colorChooserShapeStyle, marginBottom: 10 }} onDragStart={(event) =>
-                    onDragStart(event, "colorChooser", { color: "#ffffff"})
+                Decision
+                <div draggable style={{ ...decisionShapeStyle, marginBottom: 10, marginTop: 5 }} onDragStart={(event) =>
+                    onDragStart(event, "decisionNode", {})
                 } >
                 </div>
             </div>
