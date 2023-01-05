@@ -1,10 +1,10 @@
 import React from 'react';
-import {textInputShapeStyle} from "./nodes/ActivityNode";
-import {startNodeShapeStyle} from "./nodes/StartNode";
-import {decisionShapeStyle} from "./nodes/DecisionNode";
-import {endNodeShapeStyle} from "./nodes/EndNode";
+import {textInputShapeStyle} from "../nodes/ActivityNode";
+import {startNodeShapeStyle} from "../nodes/StartNode";
+import {decisionShapeStyle} from "../nodes/DecisionNode";
+import {endNodeShapeStyle} from "../nodes/EndNode";
 
-export default function NodesToolBar() {
+export default function NodesToolbar() {
     const onDragStart = (event: any, nodeType: String, nodeData: any) => {
         event.dataTransfer.setData('application/reactflow', JSON.stringify({ nodeType, nodeData }));
         event.dataTransfer.effectAllowed = 'move';

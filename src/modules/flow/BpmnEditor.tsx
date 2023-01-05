@@ -11,7 +11,8 @@ import 'reactflow/dist/style.css';
 import shallow from 'zustand/shallow';
 import useStore from '../../store';
 import {useCallback, useRef} from "react";
-import NodesToolBar from "./NodesToolBar";
+import NodesToolbar from "./toolbars/NodesToolbar";
+import ControlsToolbar from "./toolbars/ControlsToolbar";
 
 const selector = (state: any) => ({
     nodes: state.nodes,
@@ -41,8 +42,6 @@ function DragAndDropFlow() {
         // @ts-ignore
         const reactFlowBounds = reactFlowWrapper.current.getBoundingClientRect();
         const { nodeType, nodeData } = JSON.parse(event.dataTransfer.getData('application/reactflow'));
-
-        console.log( nodeType )
 
         // check if the dropped element is valid
         if (typeof nodeType === 'undefined' || !nodeType) {
@@ -87,7 +86,10 @@ function DragAndDropFlow() {
             <Controls />
             <Background variant={BackgroundVariant.Dots} />
             <Panel position="top-left">
-                <NodesToolBar />
+                <NodesToolbar />
+            </Panel>
+            <Panel position="top-right">
+                <ControlsToolbar />
             </Panel>
         </ReactFlow>
     );

@@ -1,11 +1,31 @@
-import React from 'react';
+import React, {useEffect, useState} from 'react';
 import { Handle, NodeProps, Position } from 'reactflow';
+import useStore from "../../../store";
 
-export type TextInputNodeData = {
-
+enum GamificationType {
+    NONE,
+    POINTS,
+    REWARDS,
+    BADGES
 }
 
-export default function ActivityNode({ id, data }: NodeProps<TextInputNodeData>) {
+export type ActivityNodeData = {
+    task?: string,
+    gamificationType? : number
+}
+
+export default function ActivityNode({ id, data }: NodeProps<ActivityNodeData>) {
+
+    const updateNodeData = useStore((state) => state.updateNodeData);
+    const [task, setTask] = useState(data.task || "");
+    const [gamificationType, setGamificationType] = useState(data.gamificationType || GamificationType.NONE.valueOf)
+
+    useEffect(() => {
+        updateNodeData<ActivityNodeData>(id, {
+            task: task,
+            gamificationType: gamificationType
+        })
+    }, [task, gamificationType])
 
     return (
         <div style={{ ...textInputShapeStyle }}>
@@ -22,16 +42,22 @@ export default function ActivityNode({ id, data }: NodeProps<TextInputNodeData>)
                     style={{ marginBottom: 10 }}
                     type="text"
                     placeholder="Task"
-                    defaultValue=""
+                    defaultValue={task}
                     className="nodrag"
+                    onChange={(event) => {
+                        setTask(event.target.value)
+                    }}
                 />
                 <span>
                     { "Gamification type: " }
-                    <select name="gamificationType" id="gamificationType">
-                        <option value="None">None</option>
-                        <option value="Points">Points</option>
-                        <option value="Rewards">Rewards</option>
-                        <option value="Badges">Badges</option>
+                    <select defaultValue={gamificationType} name="gamificationType" id="gamificationType" onChange={(event) => {
+                        // @ts-ignore
+                        setGamificationType(GamificationType[event.target.value])
+                    }}>
+                        <option value={GamificationType.NONE.valueOf()}>None</option>
+                        <option value={GamificationType.POINTS.valueOf()}>Points</option>
+                        <option value={GamificationType.REWARDS.valueOf()}>Rewards</option>
+                        <option value={GamificationType.BADGES.valueOf()}>Badges</option>
                     </select>
                 </span>
             </div>

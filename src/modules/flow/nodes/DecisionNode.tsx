@@ -17,7 +17,7 @@ export default function DecisionNode({ id, data }: NodeProps<DecisionNodeData>) 
                     top: 5
                 }}
                 type="text"
-                placeholder="Question"
+                placeholder="Condition"
                 defaultValue=""
                 className="nodrag"
             />
@@ -29,7 +29,7 @@ export default function DecisionNode({ id, data }: NodeProps<DecisionNodeData>) 
                     left: 30
                 }}
                 type="text"
-                placeholder="Condition 1"
+                placeholder="Path 1"
                 defaultValue=""
                 className="nodrag"
             />
@@ -41,7 +41,7 @@ export default function DecisionNode({ id, data }: NodeProps<DecisionNodeData>) 
                     left: 30
                 }}
                 type="text"
-                placeholder="Condition 2"
+                placeholder="Path 2"
                 defaultValue=""
                 className="nodrag"
             />

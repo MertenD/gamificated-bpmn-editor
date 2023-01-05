@@ -23,7 +23,8 @@ export type RFState = {
     onNodesChange: OnNodesChange;
     onEdgesChange: OnEdgesChange;
     onConnect: OnConnect;
-    getNodeById: (nodeID: string) => Node | null
+    updateNodeData: <NodeData>(nodeId: string, data: NodeData) => void;
+    getNodeById: (nodeId: string) => Node | null;
 };
 
 export const useStore = create<RFState>((set, get) => ({
@@ -48,6 +49,16 @@ export const useStore = create<RFState>((set, get) => ({
     onConnect: (connection: Connection) => {
         set({
             edges: addEdge(connection, get().edges)
+        });
+    },
+    updateNodeData: <NodeData>(nodeId: string, data: NodeData) => {
+        set({
+            nodes: get().nodes.map((node) => {
+                if (node.id === nodeId) {
+                    node.data = data;
+                }
+                return node;
+            }),
         });
     },
     getNodeById: (nodeId: string): Node | null => {
