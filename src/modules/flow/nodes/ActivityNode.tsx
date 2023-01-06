@@ -1,13 +1,7 @@
 import React, {useEffect, useState} from 'react';
 import { Handle, NodeProps, Position } from 'reactflow';
 import useStore from "../../../store";
-
-enum GamificationType {
-    NONE = "None",
-    POINTS = "Points",
-    REWARDS = "Rewards",
-    BADGES = "Badges"
-}
+import {GamificationType} from "../../../model/GamificationType";
 
 export type ActivityNodeData = {
     task?: string,
