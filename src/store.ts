@@ -16,6 +16,7 @@ import ActivityNode from "./modules/flow/nodes/ActivityNode";
 import StartNode from "./modules/flow/nodes/StartNode";
 import DecisionNode from "./modules/flow/nodes/DecisionNode";
 import EndNode from "./modules/flow/nodes/EndNode";
+import {v4 as uuidv4} from 'uuid';
 
 export type RFState = {
     nodes: Node[];
@@ -63,20 +64,7 @@ export const useStore = create<RFState>((set, get) => ({
         });
     },
     getNextNodeId: () => {
-        let lowest = 999999
-        let highest = -1
-        get().nodes.forEach((node) => {
-            if (Number(node.id) > highest) {
-                highest = Number(node.id)
-            }
-            if (Number(node.id) < lowest) {
-                lowest = Number(node.id)
-            }
-        })
-        if (lowest > 0 && lowest < highest) {
-            return String(lowest-1)
-        }
-        return String(highest+1)
+        return uuidv4();
     },
     getNodeById: (nodeId: string): Node | null => {
         let resultNode = null

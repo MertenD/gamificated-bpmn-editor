@@ -1,7 +1,6 @@
-import React, {ChangeEvent, useRef} from 'react';
+import React from 'react';
 import useStore from "../../../store";
 import {Node, Edge, useReactFlow} from "reactflow";
-import {getNextKeyDef} from "@testing-library/user-event/dist/keyboard/getNextKeyDef";
 
 type BpmnDto = {
     nodes: Node[],
@@ -38,22 +37,19 @@ export default function ControlsToolbar() {
             if (progressEvent.target !== null) {
                 const bpmnDto = JSON.parse(String(progressEvent.target.result)) as BpmnDto
 
-                // This whole process changes the id's of the nodes and adapts the edges as well to that change
+                // This whole process changes the id's of the nodes and adapts the edges as well to that change.
                 // This is necessary so that the loaded nodes will be re-rendered and the loaded data is loaded into the node component
-                const idPairs = bpmnDto.nodes.reduce((accumulator, node) => {
-                    // @ts-ignore
+                const newIdPairs = bpmnDto.nodes.reduce((accumulator: Record<string, string>, node) => {
                     accumulator[node.id] = getNextNodeId()
-                    // @ts-ignore
-                    reactFlowInstance.addNodes({ ...node, id: accumulator[node.id] })
                     return accumulator;
                 }, {});
                 const newNodes = bpmnDto.nodes.map((node) => {
                     // @ts-ignore
-                    return { ...node, id: idPairs[node.id] }
+                    return { ...node, id: newIdPairs[node.id] }
                 })
                 const newEdges = bpmnDto.edges.map((edge) => {
                     // @ts-ignore
-                    return { ...edge, source: idPairs[edge.source], target: idPairs[edge.target]}
+                    return { ...edge, source: newIdPairs[edge.source], target: newIdPairs[edge.target]}
                 })
 
                 reactFlowInstance.setNodes(newNodes)
