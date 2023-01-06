@@ -2,19 +2,25 @@ import React, {useEffect, useState} from 'react';
 import { Handle, NodeProps, Position } from 'reactflow';
 import useStore from "../../../store";
 
+enum GamificationType {
+    NONE = "None",
+    POINTS = "Points",
+    REWARDS = "Rewards",
+    BADGES = "Badges"
+}
+
 export type ActivityNodeData = {
     task?: string,
-    gamificationType? : string
+    gamificationType? : GamificationType
 }
 
 export default function ActivityNode({ id, data }: NodeProps<ActivityNodeData>) {
 
     const updateNodeData = useStore((state) => state.updateNodeData);
     const [task, setTask] = useState(data.task || "");
-    const [gamificationType, setGamificationType] = useState(data.gamificationType || "none")
+    const [gamificationType, setGamificationType] = useState(data.gamificationType || GamificationType.NONE)
 
     useEffect(() => {
-        console.log(id)
         updateNodeData<ActivityNodeData>(id, {
             task: task,
             gamificationType: gamificationType
@@ -48,10 +54,11 @@ export default function ActivityNode({ id, data }: NodeProps<ActivityNodeData>) 
                         // @ts-ignore
                         setGamificationType(event.target.value)
                     }}>
-                        <option value={"none"}>None</option>
-                        <option value={"points"}>Points</option>
-                        <option value={"rewards"}>Rewards</option>
-                        <option value={"badges"}>Badges</option>
+                        {
+                            Object.values(GamificationType).map(type => {
+                                return <option key={type.valueOf()} value={type}>{type.valueOf()}</option>
+                            })
+                        }
                     </select>
                 </span>
             </div>
