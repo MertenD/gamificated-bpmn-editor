@@ -15,6 +15,7 @@ import NodesToolbar from "./toolbars/NodesToolbar";
 import ControlsToolbar from "./toolbars/ControlsToolbar";
 
 const selector = (state: any) => ({
+    getNextNodeId: state.getNextNodeId,
     nodes: state.nodes,
     edges: state.edges,
     onNodesChange: state.onNodesChange,
@@ -23,10 +24,8 @@ const selector = (state: any) => ({
     nodeTypes: state.nodeTypes
 });
 
-let nodeId = 0;
-
 function DragAndDropFlow() {
-    const { nodes, edges, onNodesChange, onEdgesChange, onConnect, nodeTypes } = useStore(selector, shallow);
+    const { getNextNodeId, nodes, edges, onNodesChange, onEdgesChange, onConnect, nodeTypes } = useStore(selector, shallow);
 
     const reactFlowWrapper = useRef(null);
     const reactFlowInstance = useReactFlow();
@@ -54,7 +53,7 @@ function DragAndDropFlow() {
         });
 
         const newNode = {
-            id: "Node" + nodeId++,
+            id: getNextNodeId(),
             type: nodeType,
             data: nodeData,
             position: position,

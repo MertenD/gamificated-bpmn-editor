@@ -2,30 +2,24 @@ import React, {useEffect, useState} from 'react';
 import { Handle, NodeProps, Position } from 'reactflow';
 import useStore from "../../../store";
 
-enum GamificationType {
-    NONE,
-    POINTS,
-    REWARDS,
-    BADGES
-}
-
 export type ActivityNodeData = {
     task?: string,
-    gamificationType? : number
+    gamificationType? : string
 }
 
 export default function ActivityNode({ id, data }: NodeProps<ActivityNodeData>) {
 
     const updateNodeData = useStore((state) => state.updateNodeData);
     const [task, setTask] = useState(data.task || "");
-    const [gamificationType, setGamificationType] = useState(data.gamificationType || GamificationType.NONE.valueOf)
+    const [gamificationType, setGamificationType] = useState(data.gamificationType || "none")
 
     useEffect(() => {
+        console.log(id)
         updateNodeData<ActivityNodeData>(id, {
             task: task,
             gamificationType: gamificationType
         })
-    }, [task, gamificationType])
+    }, [id, task, gamificationType])
 
     return (
         <div style={{ ...textInputShapeStyle }}>
@@ -52,12 +46,12 @@ export default function ActivityNode({ id, data }: NodeProps<ActivityNodeData>) 
                     { "Gamification type: " }
                     <select defaultValue={gamificationType} name="gamificationType" id="gamificationType" onChange={(event) => {
                         // @ts-ignore
-                        setGamificationType(GamificationType[event.target.value])
+                        setGamificationType(event.target.value)
                     }}>
-                        <option value={GamificationType.NONE.valueOf()}>None</option>
-                        <option value={GamificationType.POINTS.valueOf()}>Points</option>
-                        <option value={GamificationType.REWARDS.valueOf()}>Rewards</option>
-                        <option value={GamificationType.BADGES.valueOf()}>Badges</option>
+                        <option value={"none"}>None</option>
+                        <option value={"points"}>Points</option>
+                        <option value={"rewards"}>Rewards</option>
+                        <option value={"badges"}>Badges</option>
                     </select>
                 </span>
             </div>

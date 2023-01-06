@@ -24,8 +24,9 @@ export type RFState = {
     onEdgesChange: OnEdgesChange;
     onConnect: OnConnect;
     updateNodeData: <NodeData>(nodeId: string, data: NodeData) => void;
+    getNextNodeId: () => string
     getNodeById: (nodeId: string) => Node | null;
-};
+}
 
 export const useStore = create<RFState>((set, get) => ({
     nodes: [],
@@ -60,6 +61,22 @@ export const useStore = create<RFState>((set, get) => ({
                 return node;
             }),
         });
+    },
+    getNextNodeId: () => {
+        let lowest = 999999
+        let highest = -1
+        get().nodes.forEach((node) => {
+            if (Number(node.id) > highest) {
+                highest = Number(node.id)
+            }
+            if (Number(node.id) < lowest) {
+                lowest = Number(node.id)
+            }
+        })
+        if (lowest > 0 && lowest < highest) {
+            return String(lowest-1)
+        }
+        return String(highest+1)
     },
     getNodeById: (nodeId: string): Node | null => {
         let resultNode = null
