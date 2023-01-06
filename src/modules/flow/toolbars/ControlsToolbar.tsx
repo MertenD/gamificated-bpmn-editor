@@ -1,66 +1,12 @@
 import React from 'react';
 import useStore from "../../../store";
-import {Node, Edge, useReactFlow} from "reactflow";
-
-type BpmnDto = {
-    nodes: Node[],
-    edges: Edge[]
-}
+import {useReactFlow} from "reactflow";
+import {onExport, onLoad, onSave} from "../../../util/ImportExportUtils";
 
 export default function ControlsToolbar() {
     const nodes = useStore((state) => state.nodes);
     const edges = useStore((state) => state.edges);
-    const getNextNodeId = useStore((state) => state.getNextNodeId)
     const reactFlowInstance = useReactFlow();
-
-    function serializeToDto(nodes: Node[], edges: Edge[]): BpmnDto {
-        return {
-            nodes: nodes,
-            edges: edges
-        }
-    }
-
-    const onSave = () => {
-        const content = "data:text/json;charset=utf-8," + encodeURIComponent(JSON.stringify(serializeToDto(nodes, edges)));
-        const anchorElement = document.getElementById('downloadSave');
-        if (anchorElement !== null) {
-            anchorElement.setAttribute("href", content);
-            anchorElement.setAttribute("download", "bpmn-diagram.json");
-            anchorElement.click();
-        }
-    }
-
-    const onLoad = (changeEvent: any) => {
-        const fileReader = new FileReader();
-        fileReader.readAsText(changeEvent.target.files[0], "UTF-8");
-        fileReader.onload = progressEvent => {
-            if (progressEvent.target !== null) {
-                const bpmnDto = JSON.parse(String(progressEvent.target.result)) as BpmnDto
-
-                // This whole process changes the id's of the nodes and adapts the edges as well to that change.
-                // This is necessary so that the loaded nodes will be re-rendered and the loaded data is loaded into the node component
-                const newIdPairs = bpmnDto.nodes.reduce((accumulator: Record<string, string>, node) => {
-                    accumulator[node.id] = getNextNodeId()
-                    return accumulator;
-                }, {});
-                const newNodes = bpmnDto.nodes.map((node) => {
-                    // @ts-ignore
-                    return { ...node, id: newIdPairs[node.id] }
-                })
-                const newEdges = bpmnDto.edges.map((edge) => {
-                    // @ts-ignore
-                    return { ...edge, source: newIdPairs[edge.source], target: newIdPairs[edge.target]}
-                })
-
-                reactFlowInstance.setNodes(newNodes)
-                reactFlowInstance.setEdges(newEdges)
-            }
-        };
-    }
-
-    const onExport = () => {
-
-    }
 
     return (
         <aside>
@@ -74,12 +20,12 @@ export default function ControlsToolbar() {
                 alignItems: 'center',
                 justifyContent: 'center',
             }}>
-                <button style={{ width: "100%", marginBottom: 10 }} onClick={onSave}>
+                <button style={{ width: "100%", marginBottom: 10 }} onClick={_ => onSave(nodes, edges)}>
                     Save
                     <a id="downloadSave" style={{ display: "none"}}></a>
                 </button>
-                <input style={{ width: "100%", marginBottom: 10 }} type="file" onChange={onLoad} />
-                <button style={{ width: "100%" }} onClick={onExport}>
+                <input style={{ width: "100%", marginBottom: 10 }} type="file" onChange={event => onLoad(event, reactFlowInstance)} />
+                <button style={{ width: "100%" }} onClick={_ => onExport()}>
                     Export for Engine
                 </button>
             </div>

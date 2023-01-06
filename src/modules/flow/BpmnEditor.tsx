@@ -13,6 +13,7 @@ import useStore from '../../store';
 import {useCallback, useRef} from "react";
 import NodesToolbar from "./toolbars/NodesToolbar";
 import ControlsToolbar from "./toolbars/ControlsToolbar";
+import { v4 as uuidv4 } from 'uuid';
 
 const selector = (state: any) => ({
     getNextNodeId: state.getNextNodeId,
@@ -25,7 +26,7 @@ const selector = (state: any) => ({
 });
 
 function DragAndDropFlow() {
-    const { getNextNodeId, nodes, edges, onNodesChange, onEdgesChange, onConnect, nodeTypes } = useStore(selector, shallow);
+    const { nodes, edges, onNodesChange, onEdgesChange, onConnect, nodeTypes } = useStore(selector, shallow);
 
     const reactFlowWrapper = useRef(null);
     const reactFlowInstance = useReactFlow();
@@ -53,7 +54,7 @@ function DragAndDropFlow() {
         });
 
         const newNode = {
-            id: getNextNodeId(),
+            id: uuidv4(),
             type: nodeType,
             data: nodeData,
             position: position,
