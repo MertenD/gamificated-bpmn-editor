@@ -1,3 +1,3 @@
-export enum PointType {
+export enum PointsType {
     EXPERIENCE = "Experience"
 }

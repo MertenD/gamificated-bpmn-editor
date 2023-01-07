@@ -1,8 +1,8 @@
 import React, {useEffect, useState} from "react"
-import {PointType} from "../../model/PointsType";
+import {PointsType} from "../../model/PointsType";
 
 export type PointsGamificationOptionsData = {
-    pointType?: PointType,
+    pointType?: PointsType,
     pointsForSuccess?: number
 }
 
@@ -13,7 +13,7 @@ interface PointsGamificationOptionsProps {
 
 export default function PointsGamificationOptions(props: PointsGamificationOptionsProps) {
 
-    const [pointType, setPointType] = useState(props.gamificationOptions.pointType || PointType.EXPERIENCE)
+    const [pointType, setPointType] = useState(props.gamificationOptions.pointType || PointsType.EXPERIENCE)
     const [pointsForSuccess, setPointsForSuccess] = useState(props.gamificationOptions.pointsForSuccess || 0)
 
     useEffect(() => {
@@ -44,7 +44,7 @@ export default function PointsGamificationOptions(props: PointsGamificationOptio
                     }}
                 >
                     {
-                        Object.values(PointType).map(type => {
+                        Object.values(PointsType).map(type => {
                             return <option key={type.valueOf()} value={type}>{ type.valueOf() }</option>
                         })
                     }

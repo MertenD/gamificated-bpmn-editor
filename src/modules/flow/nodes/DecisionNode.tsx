@@ -1,6 +1,7 @@
 import React, {useEffect, useState} from 'react';
-import { Handle, NodeProps, Position } from 'reactflow';
+import {Handle, NodeProps, Position} from 'reactflow';
 import useStore from "../../../store";
+import {PointsType} from "../../../model/PointsType";
 
 enum Comparisons {
     EQUALS = "=",
@@ -17,11 +18,8 @@ export type DecisionNodeData = {
     valueToCompare?: string
 }
 
-// TODO Batches und Experience Points können auch in einer Comparison benutzt werden
-
 export default function DecisionNode({ id, data }: NodeProps<DecisionNodeData>) {
 
-    const nodes = useStore((state) => state.nodes);
     const getPreviousNodes = useStore((state) => state.getPreviousNodes)
     const updateNodeData = useStore((state) => state.updateNodeData);
     const [variableName, setVariableName] = useState(data.variableName || "");
@@ -54,15 +52,16 @@ export default function DecisionNode({ id, data }: NodeProps<DecisionNodeData>) 
                 }}
             >
                 {
-                    Object.values(
-                        // Get all available variable names from all nodes that are no decision nodes
-                        getPreviousNodes(id)
-                            .filter((node) => node.type !== "decisionNode")
-                            .map((node) => node.data.variableName)
-                            .filter(name => name !== undefined && name !== "")
-                    ).map(name => {
-                        return <option key={name} value={name}>{ name }</option>
-                    })
+                    // Get all available variable names from all previous nodes that are no decision nodes
+                    // also add the points type names
+                    getPreviousNodes(id)
+                        .filter((node) => node.type !== "decisionNode")
+                        .map((node) => node.data.variableName)
+                        .filter(name => name !== undefined && name !== "")
+                        .concat(Object.values(PointsType))
+                        .map(name => {
+                            return <option key={name} value={name}>{ name }</option>
+                        })
                 }
             </select>
             <select
