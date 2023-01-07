@@ -16,6 +16,8 @@ import ActivityNode from "./modules/flow/nodes/ActivityNode";
 import StartNode from "./modules/flow/nodes/StartNode";
 import DecisionNode from "./modules/flow/nodes/DecisionNode";
 import EndNode from "./modules/flow/nodes/EndNode";
+import {Simulate} from "react-dom/test-utils";
+import input = Simulate.input;
 
 export type RFState = {
     nodes: Node[];
@@ -24,6 +26,7 @@ export type RFState = {
     onEdgesChange: OnEdgesChange;
     onConnect: OnConnect;
     updateNodeData: <NodeData>(nodeId: string, data: NodeData) => void;
+    getPreviousNodes: (nodeId: string) => Node[];
     getNodeById: (nodeId: string) => Node | null;
 }
 
@@ -60,6 +63,14 @@ export const useStore = create<RFState>((set, get) => ({
                 return node;
             }),
         });
+    },
+    getPreviousNodes: (nodeId: string): Node[] => {
+        const inputEdges = get().edges.filter((edge) => edge.target === nodeId)
+        const nodes = inputEdges.map((edge) => get().getNodeById(edge.source)).filter((node) => node !== null) as Node[]
+        nodes.push(...nodes.flatMap((node) =>
+            get().getPreviousNodes(node.id)
+        ))
+        return nodes
     },
     getNodeById: (nodeId: string): Node | null => {
         let resultNode = null

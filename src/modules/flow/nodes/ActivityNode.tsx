@@ -10,16 +10,20 @@ export type ActivityNodeData = {
     task?: string,
     activityType?: ActivityType
     choices?: string,
+    variableName?: string,
     gamificationType? : GamificationType
     gamificationOptions?: PointsGamificationOptionsData | RewardGamificationOptionsData
 }
 
 export default function ActivityNode({ id, data }: NodeProps<ActivityNodeData>) {
 
+    const nodes = useStore(state => state.nodes)
+
     const updateNodeData = useStore((state) => state.updateNodeData);
     const [task, setTask] = useState(data.task || "");
     const [activityType, setActivityType] = useState(data.activityType || ActivityType.TEXT_INPUT)
     const [choices, setChoices] = useState(data.choices || "")
+    const [variableName, setVariableName] = useState(data.variableName || "")
     const [gamificationType, setGamificationType] = useState(data.gamificationType || GamificationType.NONE)
     const [gamificationOptions, setGamificationOptions] = useState(data.gamificationOptions || {})
 
@@ -28,10 +32,12 @@ export default function ActivityNode({ id, data }: NodeProps<ActivityNodeData>) 
             task: task,
             activityType: activityType,
             choices: choices,
+            variableName: variableName,
             gamificationType: gamificationType,
             gamificationOptions: gamificationType === GamificationType.NONE ? {} : gamificationOptions
         })
-    }, [id, task, activityType, choices, gamificationType, gamificationOptions])
+        console.log(nodes.map(node => node.data.variableName))
+    }, [id, task, activityType, choices, variableName, gamificationType, gamificationOptions])
 
     return (
         <div style={{ ...textInputShapeStyle }}>
@@ -107,6 +113,24 @@ export default function ActivityNode({ id, data }: NodeProps<ActivityNodeData>) 
                         }
                     })()
                 }
+                <span style={{
+                    width: "100%",
+                    display: "flex",
+                    flexDirection: "row",
+                    justifyContent: "space-between",
+                    marginBottom: 10
+                }}>
+                    { "Save input as: " }
+                    <input
+                        type="text"
+                        placeholder="Variable name"
+                        defaultValue={variableName}
+                        className="nodrag"
+                        onChange={(event) => {
+                            setVariableName(event.target.value)
+                        }}
+                    />
+                </span>
                 <hr style={{ width: "100%" }}/>
                 <span style={{
                     width: "100%",

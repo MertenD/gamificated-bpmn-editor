@@ -2,68 +2,126 @@ import React, {useEffect, useState} from 'react';
 import { Handle, NodeProps, Position } from 'reactflow';
 import useStore from "../../../store";
 
-export type DecisionNodeData = {
-    condition?: string,
-    path1?: string,
-    path2?: string
+enum Comparisons {
+    EQUALS = "=",
+    NOT_EQUALS = "!=",
+    GREATER = ">",
+    GREATER_OR_EQUALS = ">=",
+    LOWER = "<",
+    LOWER_OR_EQUALS = "<="
 }
+
+export type DecisionNodeData = {
+    variableName?: string,
+    comparison?: string,
+    valueToCompare?: string
+}
+
+// TODO Batches und Experience Points können auch in einer Comparison benutzt werden
 
 export default function DecisionNode({ id, data }: NodeProps<DecisionNodeData>) {
 
+    const nodes = useStore((state) => state.nodes);
+    const getPreviousNodes = useStore((state) => state.getPreviousNodes)
     const updateNodeData = useStore((state) => state.updateNodeData);
-    const [condition, setCondition] = useState(data.condition || "");
-    const [path1, setPath1] = useState(data.path1 || "");
-    const [path2, setPath2] = useState(data.path2 || "");
+    const [variableName, setVariableName] = useState(data.variableName || "");
+    const [comparison, setComparison] = useState(data.comparison || Comparisons.EQUALS);
+    const [valueToCompare, setValueToCompare] = useState(data.valueToCompare || "");
 
     useEffect(() => {
         updateNodeData<DecisionNodeData>(id, {
-            condition: condition,
-            path1: path1,
-            path2: path2
+            variableName: variableName,
+            comparison: comparison,
+            valueToCompare: valueToCompare
         })
-    }, [id, condition, path1, path2])
+    }, [id, variableName, comparison, valueToCompare])
 
     return (
         <div style={{ backgroundColor: "transparent", position: "relative" }}>
-            <input
+            <select
                 style={{
                     width: 100,
                     position: 'fixed',
                     right: -120,
                     top: 5
                 }}
-                type="text"
-                placeholder="Condition"
-                defaultValue={condition}
+                defaultValue={variableName}
+                name="variableName"
+                id="variableName"
                 className="nodrag"
-                onChange={(event) => setCondition(event.target.value)}
-            />
+                onChange={(event) => {
+                    setVariableName(event.target.value)
+                }}
+            >
+                {
+                    Object.values(
+                        // Get all available variable names from all nodes that are no decision nodes
+                        getPreviousNodes(id)
+                            .filter((node) => node.type !== "decisionNode")
+                            .map((node) => node.data.variableName)
+                            .filter(name => name !== undefined && name !== "")
+                    ).map(name => {
+                        return <option key={name} value={name}>{ name }</option>
+                    })
+                }
+            </select>
+            <select
+                style={{
+                    width: 50,
+                    position: 'fixed',
+                    right: -180,
+                    top: 5
+                }}
+                defaultValue={comparison}
+                name="comparison"
+                id="comparison"
+                className="nodrag"
+                onChange={(event) => {
+                    getPreviousNodes(id)
+                    setComparison(event.target.value)
+                }}
+            >
+                {
+                    Object.values(Comparisons).map(comparison => {
+                        return <option key={comparison.valueOf()} value={comparison}>{ comparison.valueOf() }</option>
+                    })
+                }
+            </select>
             <input
+                style={{
+                    width: 100,
+                    position: 'fixed',
+                    right: -300,
+                    top: 5
+                }}
+                type="text"
+                placeholder="Other value"
+                defaultValue={valueToCompare}
+                className="nodrag"
+                onChange={(event) =>
+                    setValueToCompare(event.target.value)
+                }
+            />
+            <div
                 style={{
                     width: 70,
                     position: 'fixed',
                     top: -30,
-                    left: 30
+                    left: 20
                 }}
-                type="text"
-                placeholder="Path 1"
-                defaultValue={path1}
-                className="nodrag"
-                onChange={(event) => setPath1(event.target.value)}
-            />
-            <input
+            >
+                { "True" }
+            </div>
+            <div
                 style={{
                     width: 70,
                     position: 'fixed',
                     bottom: -30,
-                    left: 30
+                    left: 25
                 }}
-                type="text"
-                placeholder="Path 2"
-                defaultValue={path2}
-                className="nodrag"
-                onChange={(event) => setPath2(event.target.value)}
-            />
+            >
+                { "False" }
+            </div>
             <div style={{ ...decisionShapeStyle }} />
             <Handle type="target" position={Position.Left} id="a"/>
             <Handle type="source" position={Position.Top} id="b"/>
