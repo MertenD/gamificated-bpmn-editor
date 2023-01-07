@@ -1,10 +1,27 @@
-import React, {useState} from "react"
+import React, {useEffect, useState} from "react"
 import {PointType} from "../../model/PointsType";
 
-export default function PointsGamificationOptions() {
+export type PointsGamificationOptionsData = {
+    pointType?: PointType,
+    pointsForSuccess?: number
+}
 
-    const [pointType, setPointType] = useState(PointType.EXPERIENCE)
-    const [pointsForSuccess, setPointsForSuccess] = useState(0)
+interface PointsGamificationOptionsProps {
+    gamificationOptions: PointsGamificationOptionsData
+    onChange: (gamificationOptions: PointsGamificationOptionsData) => void
+}
+
+export default function PointsGamificationOptions(props: PointsGamificationOptionsProps) {
+
+    const [pointType, setPointType] = useState(props.gamificationOptions.pointType || PointType.EXPERIENCE)
+    const [pointsForSuccess, setPointsForSuccess] = useState(props.gamificationOptions.pointsForSuccess || 0)
+
+    useEffect(() => {
+        props.onChange({
+            pointType: pointType,
+            pointsForSuccess: pointsForSuccess
+        })
+    }, [pointType, pointsForSuccess])
 
     return (
         <>

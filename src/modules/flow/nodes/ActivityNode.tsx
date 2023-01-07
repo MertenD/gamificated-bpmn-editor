@@ -2,13 +2,15 @@ import React, {useEffect, useState} from 'react';
 import {Handle, NodeProps, Position} from 'reactflow';
 import useStore from "../../../store";
 import {GamificationType} from "../../../model/GamificationType";
-import PointsGamificationOptions from "../../gamification/PointsGamificationOptions";
+import PointsGamificationOptions, {PointsGamificationOptionsData} from "../../gamification/PointsGamificationOptions";
 import {ActivityType} from "../../../model/ActivityType";
+import RewardGamificationOptions, {RewardGamificationOptionsData} from "../../gamification/RewardGamificationOptions";
 
 export type ActivityNodeData = {
     task?: string,
     activityType?: ActivityType
     gamificationType? : GamificationType
+    gamificationOptions?: PointsGamificationOptionsData | RewardGamificationOptionsData
 }
 
 export default function ActivityNode({ id, data }: NodeProps<ActivityNodeData>) {
@@ -17,14 +19,16 @@ export default function ActivityNode({ id, data }: NodeProps<ActivityNodeData>) 
     const [task, setTask] = useState(data.task || "");
     const [activityType, setActivityType] = useState(data.activityType || ActivityType.TEXT_INPUT)
     const [gamificationType, setGamificationType] = useState(data.gamificationType || GamificationType.NONE)
+    const [gamificationOptions, setGamificationOptions] = useState(data.gamificationOptions || {})
 
     useEffect(() => {
         updateNodeData<ActivityNodeData>(id, {
             task: task,
             activityType: activityType,
-            gamificationType: gamificationType
+            gamificationType: gamificationType,
+            gamificationOptions: gamificationType === GamificationType.NONE ? {} : gamificationOptions
         })
-    }, [id, task, activityType, gamificationType])
+    }, [id, task, activityType, gamificationType, gamificationOptions])
 
     return (
         <div style={{ ...textInputShapeStyle }}>
@@ -99,11 +103,26 @@ export default function ActivityNode({ id, data }: NodeProps<ActivityNodeData>) 
                         }
                     </select>
                 </span>
-                { gamificationType === GamificationType.POINTS ? (
-                    <PointsGamificationOptions />
-                ) : (
-                    <></>
-                )}
+                {
+                    (() => {
+                        switch (gamificationType) {
+                            case (GamificationType.POINTS):
+                                return <PointsGamificationOptions
+                                    gamificationOptions={gamificationOptions as PointsGamificationOptionsData}
+                                    onChange={(gamificationOptions: PointsGamificationOptionsData) => {
+                                        setGamificationOptions(gamificationOptions)
+                                    }}
+                                />
+                            case GamificationType.REWARDS:
+                                return <RewardGamificationOptions
+                                    gamificationOptions={gamificationOptions as RewardGamificationOptionsData}
+                                    onChange={(gamificationOptions: RewardGamificationOptionsData) => {
+                                        setGamificationOptions(gamificationOptions)
+                                    }}
+                                />
+                        }
+                    })()
+                }
             </div>
         </div>
     )
