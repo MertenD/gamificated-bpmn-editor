@@ -9,6 +9,7 @@ import RewardGamificationOptions, {RewardGamificationOptionsData} from "../../ga
 export type ActivityNodeData = {
     task?: string,
     activityType?: ActivityType
+    choices?: string,
     gamificationType? : GamificationType
     gamificationOptions?: PointsGamificationOptionsData | RewardGamificationOptionsData
 }
@@ -18,6 +19,7 @@ export default function ActivityNode({ id, data }: NodeProps<ActivityNodeData>) 
     const updateNodeData = useStore((state) => state.updateNodeData);
     const [task, setTask] = useState(data.task || "");
     const [activityType, setActivityType] = useState(data.activityType || ActivityType.TEXT_INPUT)
+    const [choices, setChoices] = useState(data.choices || "")
     const [gamificationType, setGamificationType] = useState(data.gamificationType || GamificationType.NONE)
     const [gamificationOptions, setGamificationOptions] = useState(data.gamificationOptions || {})
 
@@ -25,10 +27,11 @@ export default function ActivityNode({ id, data }: NodeProps<ActivityNodeData>) 
         updateNodeData<ActivityNodeData>(id, {
             task: task,
             activityType: activityType,
+            choices: choices,
             gamificationType: gamificationType,
             gamificationOptions: gamificationType === GamificationType.NONE ? {} : gamificationOptions
         })
-    }, [id, task, activityType, gamificationType, gamificationOptions])
+    }, [id, task, activityType, choices, gamificationType, gamificationOptions])
 
     return (
         <div style={{ ...textInputShapeStyle }}>
@@ -53,6 +56,7 @@ export default function ActivityNode({ id, data }: NodeProps<ActivityNodeData>) 
                         setTask(event.target.value)
                     }}
                 />
+                <hr style={{ width: "100%" }}/>
                 <span style={{
                     width: "100%",
                     display: "flex",
@@ -78,6 +82,32 @@ export default function ActivityNode({ id, data }: NodeProps<ActivityNodeData>) 
                         }
                     </select>
                 </span>
+                {
+                    (() => {
+                        switch (activityType) {
+                            case ActivityType.TEXT_INPUT:
+                                return <></>
+                            case ActivityType.SINGLE_CHOICE:
+                            case ActivityType.MULTIPLE_CHOICE:
+                                return (
+                                    <input
+                                        style={{
+                                            width: "100%",
+                                            marginBottom: 10
+                                        }}
+                                        type="text"
+                                        placeholder="Choices (1,2,...)"
+                                        defaultValue={choices}
+                                        className="nodrag"
+                                        onChange={(event) => {
+                                            setChoices(event.target.value)
+                                        }}
+                                    />
+                                )
+                        }
+                    })()
+                }
+                <hr style={{ width: "100%" }}/>
                 <span style={{
                     width: "100%",
                     display: "flex",

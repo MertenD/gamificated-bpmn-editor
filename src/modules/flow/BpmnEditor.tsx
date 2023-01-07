@@ -10,7 +10,7 @@ import ReactFlow, {
 import 'reactflow/dist/style.css';
 import shallow from 'zustand/shallow';
 import useStore from '../../store';
-import {useCallback, useRef} from "react";
+import React, {useCallback, useRef} from "react";
 import NodesToolbar from "./toolbars/NodesToolbar";
 import ControlsToolbar from "./toolbars/ControlsToolbar";
 import { v4 as uuidv4 } from 'uuid';
