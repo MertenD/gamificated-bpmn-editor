@@ -40,7 +40,7 @@ export default function DecisionNode({ id, data }: NodeProps<DecisionNodeData>) 
                 .concat(Object.values(PointsType).map(type => "PT:" + type))
         )))
 
-    }, [id, nodes, edges])
+    }, [id, nodes, edges, getPreviousNodes])
 
     useEffect(() => {
         updateNodeData<DecisionNodeData>(id, {
@@ -48,7 +48,7 @@ export default function DecisionNode({ id, data }: NodeProps<DecisionNodeData>) 
             comparison: comparison,
             valueToCompare: valueToCompare
         })
-    }, [id, variableName, comparison, valueToCompare])
+    }, [id, variableName, comparison, valueToCompare, updateNodeData])
 
     return (
         <div style={{ backgroundColor: "transparent", position: "relative" }}>

@@ -50,7 +50,6 @@ export default function RewardGamificationOptions(props: RewardGamificationOptio
                 .concat(Object.values(PointsType).map(type => "PT:" + type))
         )))
 
-    }, [props.nodeId, nodes, edges])
 
     useEffect(() => {
         props.onChange({
@@ -60,7 +59,7 @@ export default function RewardGamificationOptions(props: RewardGamificationOptio
             comparison: comparison,
             valueToCompare: valueToCompare
         })
-    }, [rewardType, hasCondition, variableName, comparison, valueToCompare])
+    }, [rewardType, hasCondition, variableName, comparison, valueToCompare, props])
 
     return (
         <>

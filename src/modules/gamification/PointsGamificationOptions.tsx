@@ -21,7 +21,7 @@ export default function PointsGamificationOptions(props: PointsGamificationOptio
             pointType: pointType,
             pointsForSuccess: pointsForSuccess
         })
-    }, [pointType, pointsForSuccess])
+    }, [pointType, pointsForSuccess, props])
 
     return (
         <>

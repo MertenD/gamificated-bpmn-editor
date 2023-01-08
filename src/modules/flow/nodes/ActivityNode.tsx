@@ -37,7 +37,7 @@ export default function ActivityNode({ id, data }: NodeProps<ActivityNodeData>) 
             gamificationType: gamificationType,
             gamificationOptions: gamificationType === GamificationType.NONE ? {} : gamificationOptions
         })
-    }, [id, task, activityType, choices, inputRegex, variableName, gamificationType, gamificationOptions])
+    }, [id, task, activityType, choices, inputRegex, variableName, gamificationType, gamificationOptions, updateNodeData])
 
     return (
         <div style={{ ...activityShapeStyle }}>
