@@ -4,7 +4,7 @@ import {serializeToDto} from "./SerializationUtils";
 import { v4 as uuidv4 } from 'uuid';
 
 export const onSave = (nodes: Node[], edges: Edge[]) => {
-    const content = "data:text/json;charset=utf-8," + encodeURIComponent(JSON.stringify(serializeToDto(nodes, edges)));
+    const content = "data:text/json;charset=utf-8," + encodeURIComponent(JSON.stringify(serializeToDto(nodes, edges), null, 2));
     const anchorElement = document.getElementById('downloadSave');
     if (anchorElement !== null) {
         anchorElement.setAttribute("href", content);

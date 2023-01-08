@@ -1,5 +1,5 @@
 import React from 'react';
-import {textInputShapeStyle} from "../nodes/ActivityNode";
+import {activityShapeStyle} from "../nodes/ActivityNode";
 import {startNodeShapeStyle} from "../nodes/StartNode";
 import {decisionShapeStyle} from "../nodes/DecisionNode";
 import {endNodeShapeStyle} from "../nodes/EndNode";
@@ -24,15 +24,15 @@ export default function NodesToolbar() {
             }}>
                 Start
                 <div draggable style={{ ...startNodeShapeStyle,  marginBottom: 10 }} onDragStart={(event) =>
-                    onDragStart(event, "start", {})
+                    onDragStart(event, "startNode", {})
                 } />
                 End
                 <div draggable style={{ ...endNodeShapeStyle,  marginBottom: 10 }} onDragStart={(event) =>
-                    onDragStart(event, "end", {})
+                    onDragStart(event, "endNode", {})
                 } />
                 Activity
-                <div draggable style={{ ...textInputShapeStyle, marginBottom: 10 }} onDragStart={(event) =>
-                    onDragStart(event, "textInput", {})
+                <div draggable style={{ ...activityShapeStyle, marginBottom: 10 }} onDragStart={(event) =>
+                    onDragStart(event, "activityNode", {})
                 } />
                 Decision
                 <div draggable style={{ ...decisionShapeStyle, marginBottom: 10, marginTop: 5 }} onDragStart={(event) =>

@@ -22,7 +22,7 @@ export default function DecisionNode({ id, data }: NodeProps<DecisionNodeData>) 
 
     const getPreviousNodes = useStore((state) => state.getPreviousNodes)
     const updateNodeData = useStore((state) => state.updateNodeData);
-    const [variableName, setVariableName] = useState(data.variableName || "");
+    const [variableName, setVariableName] = useState(data.variableName || PointsType.EXPERIENCE.valueOf());
     const [comparison, setComparison] = useState(data.comparison || Comparisons.EQUALS);
     const [valueToCompare, setValueToCompare] = useState(data.valueToCompare || "");
 
@@ -58,7 +58,7 @@ export default function DecisionNode({ id, data }: NodeProps<DecisionNodeData>) 
                         .filter((node) => node.type !== "decisionNode")
                         .map((node) => node.data.variableName)
                         .filter(name => name !== undefined && name !== "")
-                        .concat(Object.values(PointsType))
+                        .concat(Object.values(PointsType).map(type => "PT:" + type))
                         .map(name => {
                             return <option key={name} value={name}>{ name }</option>
                         })
@@ -76,7 +76,6 @@ export default function DecisionNode({ id, data }: NodeProps<DecisionNodeData>) 
                 id="comparison"
                 className="nodrag"
                 onChange={(event) => {
-                    getPreviousNodes(id)
                     setComparison(event.target.value)
                 }}
             >

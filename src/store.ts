@@ -1,23 +1,21 @@
 import create from 'zustand';
 import {
+    addEdge,
+    applyEdgeChanges,
+    applyNodeChanges,
     Connection,
     Edge,
     EdgeChange,
     Node,
     NodeChange,
-    addEdge,
-    OnNodesChange,
-    OnEdgesChange,
     OnConnect,
-    applyNodeChanges,
-    applyEdgeChanges
+    OnEdgesChange,
+    OnNodesChange
 } from 'reactflow';
 import ActivityNode from "./modules/flow/nodes/ActivityNode";
 import StartNode from "./modules/flow/nodes/StartNode";
 import DecisionNode from "./modules/flow/nodes/DecisionNode";
 import EndNode from "./modules/flow/nodes/EndNode";
-import {Simulate} from "react-dom/test-utils";
-import input = Simulate.input;
 
 export type RFState = {
     nodes: Node[];
@@ -34,9 +32,9 @@ export const useStore = create<RFState>((set, get) => ({
     nodes: [],
     edges: [],
     nodeTypes: {
-        textInput: ActivityNode,
-        start: StartNode,
-        end: EndNode,
+        activityNode: ActivityNode,
+        startNode: StartNode,
+        endNode: EndNode,
         decisionNode: DecisionNode
     },
     onNodesChange: (changes: NodeChange[]) => {
