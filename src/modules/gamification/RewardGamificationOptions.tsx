@@ -22,6 +22,7 @@ export type RewardGamificationOptionsData = {
 
 interface RewardGamificationOptionsProps {
     nodeId: string,
+    parentVariableName: string,
     gamificationOptions: RewardGamificationOptionsData
     onChange: (gamificationOptions: RewardGamificationOptionsData) => void
 }
@@ -46,10 +47,12 @@ export default function RewardGamificationOptions(props: RewardGamificationOptio
             getPreviousNodes(props.nodeId)
                 .filter((node) => node.type !== "decisionNode")
                 .map((node) => node.data.variableName)
+                .concat(props.parentVariableName)
                 .filter(name => name !== undefined && name !== "")
                 .concat(Object.values(PointsType).map(type => "PT:" + type))
         )))
 
+    }, [props.nodeId, props.parentVariableName, nodes, edges, getPreviousNodes])
 
     useEffect(() => {
         props.onChange({

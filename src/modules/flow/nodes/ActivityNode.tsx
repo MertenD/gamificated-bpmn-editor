@@ -184,6 +184,7 @@ export default function ActivityNode({ id, data }: NodeProps<ActivityNodeData>) 
                             case GamificationType.REWARDS:
                                 return <RewardGamificationOptions
                                     nodeId={id}
+                                    parentVariableName={variableName}
                                     gamificationOptions={gamificationOptions as RewardGamificationOptionsData}
                                     onChange={(gamificationOptions: RewardGamificationOptionsData) => {
                                         setGamificationOptions(gamificationOptions)
