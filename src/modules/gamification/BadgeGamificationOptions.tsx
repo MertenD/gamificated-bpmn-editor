@@ -1,5 +1,5 @@
 import React, {useEffect, useState} from "react"
-import {RewardType} from "../../model/RewardType";
+import {BadgeType} from "../../model/BadgeType";
 import {PointsType} from "../../model/PointsType";
 import useStore from "../../store";
 
@@ -12,29 +12,29 @@ enum Comparisons {
     LOWER_OR_EQUALS = "<="
 }
 
-export type RewardGamificationOptionsData = {
-    rewardType?: RewardType,
+export type BadgeGamificationOptionsData = {
+    badgeType?: BadgeType,
     hasCondition?: boolean
     variableName?: string,
     comparison?: string,
     valueToCompare?: string
 }
 
-interface RewardGamificationOptionsProps {
+interface BadgeGamificationOptionsProps {
     nodeId: string,
     parentVariableName: string,
-    gamificationOptions: RewardGamificationOptionsData
-    onChange: (gamificationOptions: RewardGamificationOptionsData) => void
+    gamificationOptions: BadgeGamificationOptionsData
+    onChange: (gamificationOptions: BadgeGamificationOptionsData) => void
 }
 
-export default function RewardGamificationOptions(props: RewardGamificationOptionsProps) {
+export default function BadgeGamificationOptions(props: BadgeGamificationOptionsProps) {
 
     const getPreviousNodes = useStore((state) => state.getPreviousNodes)
 
     const nodes = useStore((state) => state.nodes)
     const edges = useStore((state) => state.edges)
     const [availableVariableNames, setAvailableVariableNames] = useState<string[]>([])
-    const [rewardType, setRewardType] = useState(props.gamificationOptions.rewardType || RewardType.EXPLORER_BATCH)
+    const [badgeType, setBadgeType] = useState(props.gamificationOptions.badgeType || BadgeType.EXPLORER_BATCH)
     const [hasCondition, setHasCondition] = useState<boolean>(props.gamificationOptions.hasCondition || false)
     const [variableName, setVariableName] = useState(props.gamificationOptions.variableName || PointsType.EXPERIENCE.valueOf());
     const [comparison, setComparison] = useState(props.gamificationOptions.comparison || Comparisons.EQUALS);
@@ -56,13 +56,13 @@ export default function RewardGamificationOptions(props: RewardGamificationOptio
 
     useEffect(() => {
         props.onChange({
-            rewardType: rewardType,
+            badgeType: badgeType,
             hasCondition: hasCondition,
             variableName: variableName,
             comparison: comparison,
             valueToCompare: valueToCompare
         })
-    }, [rewardType, hasCondition, variableName, comparison, valueToCompare, props])
+    }, [badgeType, hasCondition, variableName, comparison, valueToCompare, props])
 
     return (
         <>
@@ -73,19 +73,19 @@ export default function RewardGamificationOptions(props: RewardGamificationOptio
                 justifyContent: "space-between",
                 marginBottom: 10
             }}>
-                { "Reward Type: " }
+                { "Badge Type: " }
                 <select
-                    defaultValue={rewardType}
-                    name="rewardType"
-                    id="rewardType"
+                    defaultValue={badgeType}
+                    name="badgeType"
+                    id="badgeType"
                     className="nodrag"
                     onChange={(event) => {
                         // @ts-ignore
-                        setRewardType(event.target.value)
+                        setBadgeType(event.target.value)
                     }}
                 >
                     {
-                        Object.values(RewardType).map(type => {
+                        Object.values(BadgeType).map(type => {
                             return <option key={type.valueOf()} value={type}>{ type.valueOf() }</option>
                         })
                     }

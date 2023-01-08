@@ -4,7 +4,7 @@ import useStore from "../../../store";
 import {GamificationType} from "../../../model/GamificationType";
 import PointsGamificationOptions, {PointsGamificationOptionsData} from "../../gamification/PointsGamificationOptions";
 import {ActivityType} from "../../../model/ActivityType";
-import RewardGamificationOptions, {RewardGamificationOptionsData} from "../../gamification/RewardGamificationOptions";
+import BadgeGamificationOptions, {BadgeGamificationOptionsData} from "../../gamification/BadgeGamificationOptions";
 
 export type ActivityNodeData = {
     task?: string,
@@ -13,7 +13,7 @@ export type ActivityNodeData = {
     inputRegex?: string,
     variableName?: string,
     gamificationType? : GamificationType
-    gamificationOptions?: PointsGamificationOptionsData | RewardGamificationOptionsData
+    gamificationOptions?: PointsGamificationOptionsData | BadgeGamificationOptionsData
 }
 
 export default function ActivityNode({ id, data }: NodeProps<ActivityNodeData>) {
@@ -181,12 +181,12 @@ export default function ActivityNode({ id, data }: NodeProps<ActivityNodeData>) 
                                         setGamificationOptions(gamificationOptions)
                                     }}
                                 />
-                            case GamificationType.REWARDS:
-                                return <RewardGamificationOptions
+                            case GamificationType.BADGES:
+                                return <BadgeGamificationOptions
                                     nodeId={id}
                                     parentVariableName={variableName}
-                                    gamificationOptions={gamificationOptions as RewardGamificationOptionsData}
-                                    onChange={(gamificationOptions: RewardGamificationOptionsData) => {
+                                    gamificationOptions={gamificationOptions as BadgeGamificationOptionsData}
+                                    onChange={(gamificationOptions: BadgeGamificationOptionsData) => {
                                         setGamificationOptions(gamificationOptions)
                                     }}
                                 />
