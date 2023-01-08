@@ -20,11 +20,27 @@ export type DecisionNodeData = {
 
 export default function DecisionNode({ id, data }: NodeProps<DecisionNodeData>) {
 
+    const nodes = useStore((state) => state.nodes)
+    const edges = useStore((state) => state.edges)
     const getPreviousNodes = useStore((state) => state.getPreviousNodes)
     const updateNodeData = useStore((state) => state.updateNodeData);
+    const [availableVariableNames, setAvailableVariableNames] = useState<string[]>([])
     const [variableName, setVariableName] = useState(data.variableName || PointsType.EXPERIENCE.valueOf());
     const [comparison, setComparison] = useState(data.comparison || Comparisons.EQUALS);
     const [valueToCompare, setValueToCompare] = useState(data.valueToCompare || "");
+
+    useEffect(() => {
+        // Get all available variable names from all previous nodes that are no decision nodes
+        // also add the points type names
+        setAvailableVariableNames(Array.from(new Set(
+            getPreviousNodes(id)
+                .filter((node) => node.type !== "decisionNode")
+                .map((node) => node.data.variableName)
+                .filter(name => name !== undefined && name !== "")
+                .concat(Object.values(PointsType).map(type => "PT:" + type))
+        )))
+
+    }, [id, nodes, edges])
 
     useEffect(() => {
         updateNodeData<DecisionNodeData>(id, {
@@ -52,16 +68,9 @@ export default function DecisionNode({ id, data }: NodeProps<DecisionNodeData>) 
                 }}
             >
                 {
-                    // Get all available variable names from all previous nodes that are no decision nodes
-                    // also add the points type names
-                    getPreviousNodes(id)
-                        .filter((node) => node.type !== "decisionNode")
-                        .map((node) => node.data.variableName)
-                        .filter(name => name !== undefined && name !== "")
-                        .concat(Object.values(PointsType).map(type => "PT:" + type))
-                        .map(name => {
-                            return <option key={name} value={name}>{ name }</option>
-                        })
+                    availableVariableNames.map(name => {
+                        return <option key={name} value={name}>{ name }</option>
+                    })
                 }
             </select>
             <select
