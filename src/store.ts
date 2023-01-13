@@ -6,6 +6,7 @@ import {
     Connection,
     Edge,
     EdgeChange,
+    MarkerType,
     Node,
     NodeChange,
     OnConnect,
@@ -49,7 +50,19 @@ export const useStore = create<RFState>((set, get) => ({
     },
     onConnect: (connection: Connection) => {
         set({
-            edges: addEdge(connection, get().edges)
+            edges: addEdge({
+                ...connection,
+                markerEnd: {
+                    type: MarkerType.ArrowClosed,
+                    color: "black",
+                    width: 100,
+                    height: 20
+                },
+                style: {
+                    stroke: "black",
+                    strokeWidth: 2
+                }
+            }, get().edges)
         });
     },
     updateNodeData: <NodeData>(nodeId: string, data: NodeData) => {
