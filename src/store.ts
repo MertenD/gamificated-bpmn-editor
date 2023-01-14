@@ -8,7 +8,7 @@ import {
     EdgeChange,
     MarkerType,
     Node,
-    NodeChange,
+    NodeChange, NodeRemoveChange,
     OnConnect,
     OnEdgesChange,
     OnNodesChange
@@ -17,6 +17,8 @@ import ActivityNode from "./modules/flow/nodes/ActivityNode";
 import StartNode from "./modules/flow/nodes/StartNode";
 import DecisionNode from "./modules/flow/nodes/DecisionNode";
 import EndNode from "./modules/flow/nodes/EndNode";
+import ChallengeNode from "./modules/flow/nodes/ChallengeNode";
+import {NodeTypes} from "./model/NodeTypes";
 
 export type RFState = {
     nodes: Node[];
@@ -27,6 +29,8 @@ export type RFState = {
     updateNodeData: <NodeData>(nodeId: string, data: NodeData) => void;
     getPreviousNodes: (nodeId: string, alreadyAddedNodeIds?: string[]) => Node[];
     getNodeById: (nodeId: string) => Node | null;
+    getChildren: (nodeId: string) => Node[];
+    updateNodeParent: (nodeId: Node, newParent: Node | undefined, oldParent: Node | undefined) => void;
 }
 
 export const edgeStyle = {
@@ -49,9 +53,26 @@ export const useStore = create<RFState>((set, get) => ({
         activityNode: ActivityNode,
         startNode: StartNode,
         endNode: EndNode,
-        decisionNode: DecisionNode
+        decisionNode: DecisionNode,
+        challengeNode: ChallengeNode
     },
     onNodesChange: (changes: NodeChange[]) => {
+        // Ungroup group if the deleted node is a group so the children are not deleted with the group
+        const nodeId = (changes[0] as NodeRemoveChange).id || null
+        if (changes[0].type === "remove" && nodeId !== null && get().getNodeById(nodeId)?.type === NodeTypes.CHALLENGE_NODE) {
+            const children = get().getChildren(nodeId)
+            set({
+                nodes: get().nodes.map((node) => {
+                    if (children.includes(node) && node.parentNode !== undefined) {
+                        const oldParentNode = get().getNodeById(node.parentNode) as Node
+                        node.parentNode = undefined
+                        node.position = { x: node.position.x + oldParentNode.position.x, y: node.position.y + oldParentNode.position.y }
+                        node.data = { ...node.data, backgroundColor: "white"}
+                    }
+                    return node
+                })
+            })
+        }
         set({
             nodes: applyNodeChanges(changes, get().nodes),
         });
@@ -111,6 +132,35 @@ export const useStore = create<RFState>((set, get) => ({
         })
         return resultNode;
     },
+    getChildren: (nodeId: string): Node[] => {
+        return get().nodes.filter((node) =>
+            node.parentNode !== undefined && node.parentNode === nodeId
+        )
+    },
+    updateNodeParent: (nodeToUpdate: Node, newParent: Node | undefined, oldParent: Node | undefined) => {
+        set({
+            nodes: get().nodes.map((node) => {
+                if (node.id === nodeToUpdate.id) {
+                    if (newParent === undefined) {
+                        node.parentNode = undefined
+                        node.position = {
+                            x: node.position.x + (oldParent !== undefined ? oldParent.position.x : 0),
+                                y: node.position.y + (oldParent !== undefined ? oldParent.position.y : 0)
+                        }
+                        node.data = { ...node.data, backgroundColor: "white"}
+                    } else {
+                        node.parentNode = newParent.id
+                        node.position = {
+                            x: node.position.x - newParent.position.x,
+                            y: node.position.y - newParent.position.y
+                        }
+                        node.data = { ...node.data, backgroundColor: newParent.data.backgroundColor}
+                    }
+                }
+                return node
+            })
+        })
+    }
 }));
 
 export default useStore;

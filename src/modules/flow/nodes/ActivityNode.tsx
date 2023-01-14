@@ -7,6 +7,7 @@ import {ActivityType} from "../../../model/ActivityType";
 import BadgeGamificationOptions, {BadgeGamificationOptionsData} from "../../gamification/BadgeGamificationOptions";
 
 export type ActivityNodeData = {
+    backgroundColor?: string,
     task?: string,
     activityType?: ActivityType
     choices?: string,
@@ -18,8 +19,8 @@ export type ActivityNodeData = {
 
 export default function ActivityNode({ id, data }: NodeProps<ActivityNodeData>) {
 
-    const updateNodeData = useStore((state) => state.updateNodeData);
-    const [task, setTask] = useState(data.task || "");
+    const updateNodeData = useStore((state) => state.updateNodeData)
+    const [task, setTask] = useState(data.task || "")
     const [activityType, setActivityType] = useState(data.activityType || ActivityType.TEXT_INPUT)
     const [choices, setChoices] = useState(data.choices || "")
     const [inputRegex, setInputRegex] = useState(data.inputRegex || "")
@@ -29,6 +30,7 @@ export default function ActivityNode({ id, data }: NodeProps<ActivityNodeData>) 
 
     useEffect(() => {
         updateNodeData<ActivityNodeData>(id, {
+            backgroundColor: data.backgroundColor,
             task: task,
             activityType: activityType,
             choices: choices,
@@ -40,7 +42,7 @@ export default function ActivityNode({ id, data }: NodeProps<ActivityNodeData>) 
     }, [id, task, activityType, choices, inputRegex, variableName, gamificationType, gamificationOptions, updateNodeData])
 
     return (
-        <div style={{ ...activityShapeStyle }}>
+        <div style={{ ...activityShapeStyle, backgroundColor: data.backgroundColor }}>
             <Handle type="source" position={Position.Right}/>
             <Handle type="target" position={Position.Left}/>
             <div style={{

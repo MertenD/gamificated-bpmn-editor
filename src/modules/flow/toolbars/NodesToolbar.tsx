@@ -4,6 +4,7 @@ import {startNodeShapeStyle} from "../nodes/StartNode";
 import {decisionShapeStyle} from "../nodes/DecisionNode";
 import {endNodeShapeStyle} from "../nodes/EndNode";
 import {NodeTypes} from "../../../model/NodeTypes";
+import {challengeShapeStyle} from "../nodes/ChallengeNode";
 
 export default function NodesToolbar() {
     const onDragStart = (event: any, nodeType: String, nodeData: any) => {
@@ -36,10 +37,13 @@ export default function NodesToolbar() {
                     onDragStart(event, NodeTypes.ACTIVITY_NODE, {})
                 } />
                 Decision
-                <div draggable style={{ ...decisionShapeStyle, marginBottom: 10, marginTop: 5 }} onDragStart={(event) =>
+                <div draggable style={{ ...decisionShapeStyle, marginBottom: 15, marginTop: 5 }} onDragStart={(event) =>
                     onDragStart(event, NodeTypes.DECISION_NODE, {})
-                } >
-                </div>
+                } />
+                Challenge
+                <div draggable style={{ ...challengeShapeStyle, marginBottom: 10 }} onDragStart={(event) => {
+                    onDragStart(event, NodeTypes.CHALLENGE_NODE, { backgroundColor: "#eeffee"})
+                }} />
             </div>
         </aside>
     );

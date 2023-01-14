@@ -5,6 +5,7 @@ import {endNodeShapeStyle} from "../nodes/EndNode";
 import {activityShapeStyle} from "../nodes/ActivityNode";
 import {decisionShapeStyle} from "../nodes/DecisionNode";
 import {NodeTypes} from "../../../model/NodeTypes";
+import {challengeShapeStyle} from "../nodes/ChallengeNode";
 
 export interface OnCanvasNodesToolbarProps {
     open: boolean;
@@ -16,7 +17,7 @@ export default function OnCanvasNodesToolbar(props: OnCanvasNodesToolbarProps) {
     const { onClose, open, position } = props;
     // Change width and height when adding new elements to toolbar
     const width = 160
-    const height = 312
+    const height = 404
 
     const handleClose = () => {
         onClose(null)
@@ -53,10 +54,13 @@ export default function OnCanvasNodesToolbar(props: OnCanvasNodesToolbarProps) {
                     handleNodeSelected(NodeTypes.ACTIVITY_NODE)
                 }}/>
                 Decision
-                <div style={{ ...decisionShapeStyle, marginBottom: 10, marginTop: 5 }} onClick={() => {
+                <div style={{ ...decisionShapeStyle, marginBottom: 15, marginTop: 5 }} onClick={() => {
                     handleNodeSelected(NodeTypes.DECISION_NODE)
-                }}>
-                </div>
+                }} />
+                Challenge
+                <div style={{ ...challengeShapeStyle, marginBottom: 10 }} onClick={() => {
+                    handleNodeSelected(NodeTypes.CHALLENGE_NODE)
+                }} />
             </div>
         </Dialog>
     );

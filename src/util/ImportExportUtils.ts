@@ -28,7 +28,7 @@ export const onLoad = (changeEvent: any, reactFlowInstance: ReactFlowInstance) =
             }, {});
             const newNodes = bpmnDto.nodes.map((node) => {
                 // @ts-ignore
-                return { ...node, id: newIdPairs[node.id] }
+                return { ...node, id: newIdPairs[node.id], parentNode: node.parentNode !== undefined ? newIdPairs[node.parentNode] : undefined }
             })
             const newEdges = bpmnDto.edges.map((edge) => {
                 // @ts-ignore

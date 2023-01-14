@@ -13,6 +13,7 @@ enum Comparisons {
 }
 
 export type DecisionNodeData = {
+    backgroundColor?: string
     variableName?: string,
     comparison?: string,
     valueToCompare?: string
@@ -44,6 +45,7 @@ export default function DecisionNode({ id, data }: NodeProps<DecisionNodeData>) 
 
     useEffect(() => {
         updateNodeData<DecisionNodeData>(id, {
+            backgroundColor: data.backgroundColor,
             variableName: variableName,
             comparison: comparison,
             valueToCompare: valueToCompare
@@ -129,7 +131,7 @@ export default function DecisionNode({ id, data }: NodeProps<DecisionNodeData>) 
             >
                 { "False" }
             </div>
-            <div style={{ ...decisionShapeStyle }} >
+            <div style={{ ...decisionShapeStyle, backgroundColor: data.backgroundColor }} >
                 <hr style={{ backgroundColor: "black", border: "1px solid black", width: "70%", marginTop: 14 }}/>
                 <hr style={{ backgroundColor: "black", border: "1px solid black", width: "70%", marginTop: -10, transform: "rotateY(0deg) rotate(90deg)" }}/>
             </div>
