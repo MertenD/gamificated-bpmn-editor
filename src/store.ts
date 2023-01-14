@@ -67,7 +67,7 @@ export const useStore = create<RFState>((set, get) => ({
         if (connection.source !== connection.target) {
             set({
                 edges: get().edges.map((edge) => {
-                    if (edge.source == connection.source) {
+                    if (edge.source == connection.source && edge.sourceHandle == connection.sourceHandle) {
                         return null
                     }
                     return edge
