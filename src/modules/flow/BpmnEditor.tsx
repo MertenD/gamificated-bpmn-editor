@@ -101,8 +101,7 @@ function DragAndDropFlow() {
             data: data,
         };
 
-        // @ts-ignore
-        reactFlowInstance.setNodes((nds) => nds.concat(newNode));
+        reactFlowInstance.addNodes(newNode);
 
         return id
     }
@@ -142,16 +141,15 @@ function DragAndDropFlow() {
                 onClose={(nodeType: string | null) => {
                     setOpenOnCanvasNodeSelector(false)
 
-                    if (nodeType !== null) {
+                    if (nodeType !== null && connectStartParams.current !== null && connectStartParams.current?.nodeId !== null) {
                         const id = addNodeAtPosition(lastEventPosition, nodeType)
-                        // @ts-ignore
-                        reactFlowInstance.setEdges((eds) => eds.concat({
+                        reactFlowInstance.addEdges({
                             id,
-                            source: connectStartParams.current?.nodeId,
+                            source: connectStartParams.current.nodeId,
                             sourceHandle: connectStartParams.current?.handleId,
                             target: id,
                             ...edgeStyle
-                        }));
+                        });
                     }
                 }}
             />
