@@ -129,7 +129,10 @@ export default function DecisionNode({ id, data }: NodeProps<DecisionNodeData>) 
             >
                 { "False" }
             </div>
-            <div style={{ ...decisionShapeStyle }} />
+            <div style={{ ...decisionShapeStyle }} >
+                <hr style={{ backgroundColor: "black", border: "1px solid black", width: "70%", marginTop: 14 }}/>
+                <hr style={{ backgroundColor: "black", border: "1px solid black", width: "70%", marginTop: -10, transform: "rotateY(0deg) rotate(90deg)" }}/>
+            </div>
             <Handle type="target" position={Position.Left} id="a"/>
             <Handle type="source" position={Position.Top} id="b"/>
             <Handle type="source" position={Position.Bottom} id="c"/>
