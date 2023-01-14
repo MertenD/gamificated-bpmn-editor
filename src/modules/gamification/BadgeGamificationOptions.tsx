@@ -52,7 +52,7 @@ export default function BadgeGamificationOptions(props: BadgeGamificationOptions
                 .concat(Object.values(PointsType).map(type => "PT:" + type))
         )))
 
-    }, [props.nodeId, props.parentVariableName, nodes, edges, getPreviousNodes])
+    }, [props.nodeId, props.parentVariableName, nodes, edges])
 
     useEffect(() => {
         props.onChange({
@@ -62,7 +62,7 @@ export default function BadgeGamificationOptions(props: BadgeGamificationOptions
             comparison: comparison,
             valueToCompare: valueToCompare
         })
-    }, [badgeType, hasCondition, variableName, comparison, valueToCompare, props])
+    }, [badgeType, hasCondition, variableName, comparison, valueToCompare])
 
     return (
         <>
