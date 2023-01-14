@@ -114,7 +114,7 @@ export default function BadgeGamificationOptions(props: BadgeGamificationOptions
                         style={{
                             width: 120
                         }}
-                        defaultValue={variableName}
+                        value={variableName}
                         name="variableName"
                         id="variableName"
                         className="nodrag"

@@ -59,7 +59,7 @@ export default function DecisionNode({ id, data }: NodeProps<DecisionNodeData>) 
                     right: -120,
                     top: 5
                 }}
-                defaultValue={variableName}
+                value={variableName}
                 name="variableName"
                 id="variableName"
                 className="nodrag"
