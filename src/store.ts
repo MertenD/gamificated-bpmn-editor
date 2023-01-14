@@ -62,12 +62,24 @@ export const useStore = create<RFState>((set, get) => ({
         });
     },
     onConnect: (connection: Connection) => {
-        set({
-            edges: addEdge({
-                ...connection,
-                ...edgeStyle
-            }, get().edges)
-        });
+        // 1. Source and target node can not be the same
+        // 2. If the target has already an ingoing connection: delete old connection
+        if (connection.source !== connection.target) {
+            set({
+                edges: get().edges.map((edge) => {
+                    if (edge.source == connection.source) {
+                        return null
+                    }
+                    return edge
+                }).filter((edge) => edge !== null).map((edge) => edge as Edge)
+            })
+            set({
+                edges: addEdge({
+                    ...connection,
+                    ...edgeStyle
+                }, get().edges)
+            });
+        }
     },
     updateNodeData: <NodeData>(nodeId: string, data: NodeData) => {
         set({
