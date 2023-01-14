@@ -4,11 +4,12 @@ import Dialog from '@mui/material/Dialog';
 import {endNodeShapeStyle} from "../nodes/EndNode";
 import {activityShapeStyle} from "../nodes/ActivityNode";
 import {decisionShapeStyle} from "../nodes/DecisionNode";
+import {NodeTypes} from "../../../model/NodeTypes";
 
 export interface OnCanvasNodesToolbarProps {
     open: boolean;
     position: {x: number, y: number}
-    onClose: (value: string | null) => void;
+    onClose: (nodeType: NodeTypes | null) => void;
 }
 
 export default function OnCanvasNodesToolbar(props: OnCanvasNodesToolbarProps) {
@@ -21,7 +22,7 @@ export default function OnCanvasNodesToolbar(props: OnCanvasNodesToolbarProps) {
         onClose(null)
     }
 
-    const handleNodeSelected = (nodeType: string) => {
+    const handleNodeSelected = (nodeType: NodeTypes) => {
         onClose(nodeType);
     };
 
@@ -45,15 +46,15 @@ export default function OnCanvasNodesToolbar(props: OnCanvasNodesToolbarProps) {
             }}>
                 End
                 <div style={{ ...endNodeShapeStyle,  marginBottom: 10 }} onClick={() => {
-                    handleNodeSelected("endNode")
+                    handleNodeSelected(NodeTypes.END_NODE)
                 }}/>
                 Activity
                 <div style={{ ...activityShapeStyle, marginBottom: 10 }} onClick={() => {
-                    handleNodeSelected("activityNode")
+                    handleNodeSelected(NodeTypes.ACTIVITY_NODE)
                 }}/>
                 Decision
                 <div style={{ ...decisionShapeStyle, marginBottom: 10, marginTop: 5 }} onClick={() => {
-                    handleNodeSelected("decisionNode")
+                    handleNodeSelected(NodeTypes.DECISION_NODE)
                 }}>
                 </div>
             </div>

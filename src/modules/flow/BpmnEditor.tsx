@@ -15,6 +15,7 @@ import NodesToolbar from "./toolbars/NodesToolbar";
 import ControlsToolbar from "./toolbars/ControlsToolbar";
 import { v4 as uuidv4 } from 'uuid';
 import OnCanvasNodesToolbar from "./toolbars/OnCanvasNodesSelector";
+import {NodeTypes} from "../../model/NodeTypes";
 
 const selector = (state: any) => ({
     getNextNodeId: state.getNextNodeId,
@@ -79,16 +80,16 @@ function DragAndDropFlow() {
         [reactFlowInstance.project]
     );
 
-    function addNodeAtPosition(position: {x: number, y:number}, nodeType: string, data: any = {}): string {
+    function addNodeAtPosition(position: {x: number, y:number}, nodeType: NodeTypes, data: any = {}): string {
         let yOffset = 0
         switch(nodeType) {
-            case "endNode":
+            case NodeTypes.END_NODE:
                 yOffset = 21
                 break
-            case "activityNode":
+            case NodeTypes.ACTIVITY_NODE:
                 yOffset = 121
                 break
-            case "decisionNode":
+            case NodeTypes.DECISION_NODE:
                 yOffset = 18
                 break
         }
@@ -139,7 +140,7 @@ function DragAndDropFlow() {
             <OnCanvasNodesToolbar
                 open={openOnCanvasNodeSelector}
                 position={lastEventPosition}
-                onClose={(nodeType: string | null) => {
+                onClose={(nodeType: NodeTypes | null) => {
                     setOpenOnCanvasNodeSelector(false)
 
                     if (nodeType !== null && connectStartParams.current !== null && connectStartParams.current?.nodeId !== null) {
