@@ -70,7 +70,7 @@ function DragAndDropFlow() {
         (event: any) => {
             const targetIsPane = event.target.classList.contains('react-flow__pane');
 
-            if (targetIsPane && reactFlowWrapper.current !== null) {
+            if (targetIsPane && connectStartParams.current?.handleType === "source" && reactFlowWrapper.current !== null) {
                 // @ts-ignore
                 const { top, left } = reactFlowWrapper.current.getBoundingClientRect();
                 setLastEventPosition({ x: event.clientX - left, y: event.clientY - top })
