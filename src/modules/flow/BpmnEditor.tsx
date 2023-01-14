@@ -72,7 +72,7 @@ function DragAndDropFlow() {
             if (targetIsPane && reactFlowWrapper.current !== null) {
                 // @ts-ignore
                 const { top, left } = reactFlowWrapper.current.getBoundingClientRect();
-                setLastEventPosition(reactFlowInstance.project({ x: event.clientX - left, y: event.clientY - top }))
+                setLastEventPosition({ x: event.clientX - left, y: event.clientY - top })
                 setOpenOnCanvasNodeSelector(true)
             }
         },
@@ -138,11 +138,12 @@ function DragAndDropFlow() {
             </Panel>
             <OnCanvasNodesToolbar
                 open={openOnCanvasNodeSelector}
+                position={lastEventPosition}
                 onClose={(nodeType: string | null) => {
                     setOpenOnCanvasNodeSelector(false)
 
                     if (nodeType !== null && connectStartParams.current !== null && connectStartParams.current?.nodeId !== null) {
-                        const id = addNodeAtPosition(lastEventPosition, nodeType)
+                        const id = addNodeAtPosition(reactFlowInstance.project(lastEventPosition), nodeType)
                         reactFlowInstance.addEdges({
                             id,
                             source: connectStartParams.current.nodeId,
