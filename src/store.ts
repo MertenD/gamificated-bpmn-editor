@@ -29,6 +29,19 @@ export type RFState = {
     getNodeById: (nodeId: string) => Node | null;
 }
 
+export const edgeStyle = {
+    markerEnd: {
+        type: MarkerType.ArrowClosed,
+        color: "black",
+        width: 100,
+        height: 20
+    },
+    style: {
+        stroke: "black",
+        strokeWidth: 2
+    }
+}
+
 export const useStore = create<RFState>((set, get) => ({
     nodes: [],
     edges: [],
@@ -52,16 +65,7 @@ export const useStore = create<RFState>((set, get) => ({
         set({
             edges: addEdge({
                 ...connection,
-                markerEnd: {
-                    type: MarkerType.ArrowClosed,
-                    color: "black",
-                    width: 100,
-                    height: 20
-                },
-                style: {
-                    stroke: "black",
-                    strokeWidth: 2
-                }
+                ...edgeStyle
             }, get().edges)
         });
     },

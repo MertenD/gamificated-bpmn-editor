@@ -2,18 +2,19 @@ import ReactFlow, {
     Background,
     BackgroundVariant,
     Controls,
-    MiniMap,
+    MiniMap, OnConnectStartParams,
     Panel,
     ReactFlowProvider,
     useReactFlow,
 } from 'reactflow';
 import 'reactflow/dist/style.css';
 import shallow from 'zustand/shallow';
-import useStore from '../../store';
+import useStore, {edgeStyle} from '../../store';
 import React, {useCallback, useRef} from "react";
 import NodesToolbar from "./toolbars/NodesToolbar";
 import ControlsToolbar from "./toolbars/ControlsToolbar";
 import { v4 as uuidv4 } from 'uuid';
+import OnCanvasNodesToolbar from "./toolbars/OnCanvasNodesSelector";
 
 const selector = (state: any) => ({
     getNextNodeId: state.getNextNodeId,
@@ -28,8 +29,12 @@ const selector = (state: any) => ({
 function DragAndDropFlow() {
     const { nodes, edges, onNodesChange, onEdgesChange, onConnect, nodeTypes } = useStore(selector, shallow);
 
+    const connectStartParams = useRef<OnConnectStartParams | null>(null);
     const reactFlowWrapper = useRef(null);
     const reactFlowInstance = useReactFlow();
+
+    const [openOnCanvasNodeSelector, setOpenOnCanvasNodeSelector] = React.useState(false);
+    const [lastEventPosition, setLastEventPosition] = React.useState<{x: number, y: number}>({x: 0, y: 0})
 
     const onDragOver = useCallback((event: any) => {
         event.preventDefault();
@@ -53,15 +58,54 @@ function DragAndDropFlow() {
             y: event.clientY - reactFlowBounds.top,
         });
 
+        addNodeAtPosition(position, nodeType, nodeData)
+    }, [reactFlowInstance]);
+
+    const onConnectStart = useCallback((event: any, node: OnConnectStartParams) => {
+        connectStartParams.current = node;
+    }, []);
+
+    const onConnectEnd = useCallback(
+        (event: any) => {
+            const targetIsPane = event.target.classList.contains('react-flow__pane');
+
+            if (targetIsPane && reactFlowWrapper.current !== null) {
+                // @ts-ignore
+                const { top, left } = reactFlowWrapper.current.getBoundingClientRect();
+                setLastEventPosition(reactFlowInstance.project({ x: event.clientX - left, y: event.clientY - top }))
+                setOpenOnCanvasNodeSelector(true)
+            }
+        },
+        [reactFlowInstance.project]
+    );
+
+    function addNodeAtPosition(position: {x: number, y:number}, nodeType: string, data: any = {}): string {
+        let yOffset = 0
+        switch(nodeType) {
+            case "endNode":
+                yOffset = 21
+                break
+            case "activityNode":
+                yOffset = 121
+                break
+            case "decisionNode":
+                yOffset = 18
+                break
+        }
+
+        const id = uuidv4();
         const newNode = {
-            id: uuidv4(),
+            id,
             type: nodeType,
-            data: nodeData,
-            position: position,
+            position: { ...position, y: position.y - yOffset },
+            data: data,
         };
 
-        reactFlowInstance.addNodes(newNode);
-    }, [reactFlowInstance]);
+        // @ts-ignore
+        reactFlowInstance.setNodes((nds) => nds.concat(newNode));
+
+        return id
+    }
 
     return (
         <ReactFlow ref={reactFlowWrapper}
@@ -70,6 +114,8 @@ function DragAndDropFlow() {
             onNodesChange={onNodesChange}
             onEdgesChange={onEdgesChange}
             onConnect={onConnect}
+            onConnectStart={onConnectStart}
+            onConnectEnd={onConnectEnd}
             onDragOver={onDragOver}
             onDrop={onDrop}
             nodeTypes={nodeTypes}
@@ -91,6 +137,24 @@ function DragAndDropFlow() {
             <Panel position="top-right">
                 <ControlsToolbar />
             </Panel>
+            <OnCanvasNodesToolbar
+                open={openOnCanvasNodeSelector}
+                onClose={(nodeType: string | null) => {
+                    setOpenOnCanvasNodeSelector(false)
+
+                    if (nodeType !== null) {
+                        const id = addNodeAtPosition(lastEventPosition, nodeType)
+                        // @ts-ignore
+                        reactFlowInstance.setEdges((eds) => eds.concat({
+                            id,
+                            source: connectStartParams.current?.nodeId,
+                            sourceHandle: connectStartParams.current?.handleId,
+                            target: id,
+                            ...edgeStyle
+                        }));
+                    }
+                }}
+            />
         </ReactFlow>
     );
 }
