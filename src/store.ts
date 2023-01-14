@@ -25,7 +25,7 @@ export type RFState = {
     onEdgesChange: OnEdgesChange;
     onConnect: OnConnect;
     updateNodeData: <NodeData>(nodeId: string, data: NodeData) => void;
-    getPreviousNodes: (nodeId: string) => Node[];
+    getPreviousNodes: (nodeId: string, alreadyAddedNodeIds?: string[]) => Node[];
     getNodeById: (nodeId: string) => Node | null;
 }
 
@@ -91,12 +91,15 @@ export const useStore = create<RFState>((set, get) => ({
             }),
         });
     },
-    getPreviousNodes: (nodeId: string): Node[] => {
+    getPreviousNodes: (nodeId: string, alreadyAddedNodeIds: string[] = []): Node[] => {
+        if (alreadyAddedNodeIds.includes(nodeId)) {
+            return []
+        }
         const inputEdges = get().edges.filter((edge) => edge.target === nodeId)
         const nodes = inputEdges.map((edge) => get().getNodeById(edge.source)).filter((node) => node !== null) as Node[]
-        nodes.push(...nodes.flatMap((node) =>
-            get().getPreviousNodes(node.id)
-        ))
+        nodes.push(...nodes.flatMap((node) => {
+            return get().getPreviousNodes(node.id, [...alreadyAddedNodeIds, nodeId])
+        }))
         return nodes
     },
     getNodeById: (nodeId: string): Node | null => {
