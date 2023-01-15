@@ -138,12 +138,22 @@ function DragAndDropFlow() {
     useEffect(() => {
         if (!isDragging) {
             nodes.filter((node: Node) => node.type !== NodeTypes.CHALLENGE_NODE).forEach((node: Node) => {
-                const intersectingChallenge = reactFlowInstance.getIntersectingNodes(node).filter((node) => node.type === NodeTypes.CHALLENGE_NODE)[0]
+                const intersectingChallenges = reactFlowInstance.getIntersectingNodes(node).filter((node) => node.type === NodeTypes.CHALLENGE_NODE)
+                // if the node already is part of a group and did not leave it, leave it as it is and don't change the parent
+                if (node.parentNode !== undefined && intersectingChallenges.map(node => node.id).includes(node.parentNode)) {
+                    return
+                }
                 // If the node had no parent it will be added
-                if (intersectingChallenge !== undefined && node.parentNode !== intersectingChallenge.id) {
-                    updateNodeParent(node, intersectingChallenge, undefined)
+                if (intersectingChallenges[0] !== undefined && node.parentNode === undefined) {
+                    console.log("no prev parent")
+                    updateNodeParent(node, intersectingChallenges[0], undefined)
+                // If the node had a parent and was moved to another parent
+                } else if (intersectingChallenges[0] !== undefined && node.parentNode !== undefined && node.parentNode !== intersectingChallenges[0].id) {
+                    console.log("to another parent")
+                    updateNodeParent(node, intersectingChallenges[0], getNodeById(node.parentNode))
                 // If the node had a parent it will be removed
-                } else if (intersectingChallenge === undefined && node.parentNode !== undefined) {
+                } else if (intersectingChallenges[0] === undefined && node.parentNode !== undefined) {
+                    console.log("no more parent")
                     updateNodeParent(node, undefined, getNodeById(node.parentNode))
                 }
             })

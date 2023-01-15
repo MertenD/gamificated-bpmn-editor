@@ -145,14 +145,16 @@ export const useStore = create<RFState>((set, get) => ({
                         node.parentNode = undefined
                         node.position = {
                             x: node.position.x + (oldParent !== undefined ? oldParent.position.x : 0),
-                                y: node.position.y + (oldParent !== undefined ? oldParent.position.y : 0)
+                            y: node.position.y + (oldParent !== undefined ? oldParent.position.y : 0)
                         }
                         node.data = { ...node.data, backgroundColor: "white"}
                     } else {
                         node.parentNode = newParent.id
+                        const xOffset = newParent.position.x - (oldParent !== undefined ? oldParent.position.x : 0)
+                        const yOffset = newParent.position.y - (oldParent !== undefined ? oldParent.position.y : 0)
                         node.position = {
-                            x: node.position.x - newParent.position.x,
-                            y: node.position.y - newParent.position.y
+                            x: node.position.x - xOffset,
+                            y: node.position.y - yOffset
                         }
                         node.data = { ...node.data, backgroundColor: newParent.data.backgroundColor}
                     }
