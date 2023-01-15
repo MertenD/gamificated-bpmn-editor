@@ -1,7 +1,7 @@
 import React from 'react';
 import {activityShapeStyle} from "../nodes/ActivityNode";
 import {startNodeShapeStyle} from "../nodes/StartNode";
-import {decisionShapeStyle} from "../nodes/DecisionNode";
+import {GatewayShapeStyle} from "../nodes/GatewayNode";
 import {endNodeShapeStyle} from "../nodes/EndNode";
 import {NodeTypes} from "../../../model/NodeTypes";
 import {challengeShapeStyle} from "../nodes/ChallengeNode";
@@ -36,9 +36,9 @@ export default function NodesToolbar() {
                 <div draggable style={{ ...activityShapeStyle, marginBottom: 10 }} onDragStart={(event) =>
                     onDragStart(event, NodeTypes.ACTIVITY_NODE, {})
                 } />
-                Decision
-                <div draggable style={{ ...decisionShapeStyle, marginBottom: 15, marginTop: 5 }} onDragStart={(event) =>
-                    onDragStart(event, NodeTypes.DECISION_NODE, {})
+                Gateway
+                <div draggable style={{ ...GatewayShapeStyle, marginBottom: 15, marginTop: 5 }} onDragStart={(event) =>
+                    onDragStart(event, NodeTypes.GATEWAY_NODE, {})
                 } />
                 Challenge
                 <div draggable style={{ ...challengeShapeStyle, marginBottom: 10 }} onDragStart={(event) => {

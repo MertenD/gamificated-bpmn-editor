@@ -2,6 +2,7 @@ import React, {useEffect, useState} from 'react';
 import {Handle, NodeProps, Position} from 'reactflow';
 import useStore from "../../../store";
 import {PointsType} from "../../../model/PointsType";
+import {NodeTypes} from "../../../model/NodeTypes";
 
 enum Comparisons {
     EQUALS = "=",
@@ -12,14 +13,14 @@ enum Comparisons {
     LOWER_OR_EQUALS = "<="
 }
 
-export type DecisionNodeData = {
+export type GatewayNodeData = {
     backgroundColor?: string
     variableName?: string,
     comparison?: string,
     valueToCompare?: string
 }
 
-export default function DecisionNode({ id, data }: NodeProps<DecisionNodeData>) {
+export default function GatewayNode({ id, data }: NodeProps<GatewayNodeData>) {
 
     const nodes = useStore((state) => state.nodes)
     const edges = useStore((state) => state.edges)
@@ -35,7 +36,7 @@ export default function DecisionNode({ id, data }: NodeProps<DecisionNodeData>) 
         // also add the points type names
         setAvailableVariableNames(Array.from(new Set(
             getPreviousNodes(id)
-                .filter((node) => node.type !== "decisionNode")
+                .filter((node) => node.type !== NodeTypes.GATEWAY_NODE)
                 .map((node) => node.data.variableName)
                 .filter(name => name !== undefined && name !== "")
                 .concat(Object.values(PointsType).map(type => "PT:" + type))
@@ -44,7 +45,7 @@ export default function DecisionNode({ id, data }: NodeProps<DecisionNodeData>) 
     }, [id, nodes, edges, getPreviousNodes])
 
     useEffect(() => {
-        updateNodeData<DecisionNodeData>(id, {
+        updateNodeData<GatewayNodeData>(id, {
             backgroundColor: data.backgroundColor,
             variableName: variableName,
             comparison: comparison,
@@ -131,7 +132,7 @@ export default function DecisionNode({ id, data }: NodeProps<DecisionNodeData>) 
             >
                 { "False" }
             </div>
-            <div style={{ ...decisionShapeStyle, backgroundColor: data.backgroundColor }} >
+            <div style={{ ...GatewayShapeStyle, backgroundColor: data.backgroundColor }} >
                 <hr style={{ backgroundColor: "black", border: "1px solid black", width: "70%", marginTop: 14 }}/>
                 <hr style={{ backgroundColor: "black", border: "1px solid black", width: "70%", marginTop: -10, transform: "rotateY(0deg) rotate(90deg)" }}/>
             </div>
@@ -142,7 +143,7 @@ export default function DecisionNode({ id, data }: NodeProps<DecisionNodeData>) 
     )
 }
 
-export const decisionShapeStyle = {
+export const GatewayShapeStyle = {
     width: 30,
     height: 30,
     transform: "rotateY(0deg) rotate(45deg)",

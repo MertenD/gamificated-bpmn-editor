@@ -1,7 +1,7 @@
 export enum NodeTypes {
     CHALLENGE_NODE = "challengeNode",
     ACTIVITY_NODE = "activityNode",
-    DECISION_NODE = "decisionNode",
+    GATEWAY_NODE = "gatewayNode",
     START_NODE = "startNode",
     END_NODE = "endNode"
 }

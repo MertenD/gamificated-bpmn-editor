@@ -15,7 +15,7 @@ import {
 } from 'reactflow';
 import ActivityNode from "./modules/flow/nodes/ActivityNode";
 import StartNode from "./modules/flow/nodes/StartNode";
-import DecisionNode from "./modules/flow/nodes/DecisionNode";
+import GatewayNode from "./modules/flow/nodes/GatewayNode";
 import EndNode from "./modules/flow/nodes/EndNode";
 import ChallengeNode from "./modules/flow/nodes/ChallengeNode";
 import {NodeTypes} from "./model/NodeTypes";
@@ -53,7 +53,7 @@ export const useStore = create<RFState>((set, get) => ({
         activityNode: ActivityNode,
         startNode: StartNode,
         endNode: EndNode,
-        decisionNode: DecisionNode,
+        gatewayNode: GatewayNode,
         challengeNode: ChallengeNode
     },
     onNodesChange: (changes: NodeChange[]) => {

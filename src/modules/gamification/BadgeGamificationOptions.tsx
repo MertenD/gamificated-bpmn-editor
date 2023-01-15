@@ -2,6 +2,7 @@ import React, {useEffect, useState} from "react"
 import {BadgeType} from "../../model/BadgeType";
 import {PointsType} from "../../model/PointsType";
 import useStore from "../../store";
+import {NodeTypes} from "../../model/NodeTypes";
 
 enum Comparisons {
     EQUALS = "=",
@@ -45,7 +46,7 @@ export default function BadgeGamificationOptions(props: BadgeGamificationOptions
         // also add the points type names
         setAvailableVariableNames(Array.from(new Set(
             getPreviousNodes(props.nodeId)
-                .filter((node) => node.type !== "decisionNode")
+                .filter((node) => node.type !== NodeTypes.GATEWAY_NODE)
                 .map((node) => node.data.variableName)
                 .concat(props.parentVariableName)
                 .filter(name => name !== undefined && name !== "")

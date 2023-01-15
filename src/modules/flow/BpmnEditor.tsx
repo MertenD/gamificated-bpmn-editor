@@ -104,7 +104,7 @@ function DragAndDropFlow() {
                 yOffset = 121
                 zIndex = 1
                 break
-            case NodeTypes.DECISION_NODE:
+            case NodeTypes.GATEWAY_NODE:
                 yOffset = 18
                 zIndex = 2
                 break

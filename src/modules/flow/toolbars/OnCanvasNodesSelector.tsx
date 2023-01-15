@@ -3,7 +3,7 @@ import DialogTitle from '@mui/material/DialogTitle';
 import Dialog from '@mui/material/Dialog';
 import {endNodeShapeStyle} from "../nodes/EndNode";
 import {activityShapeStyle} from "../nodes/ActivityNode";
-import {decisionShapeStyle} from "../nodes/DecisionNode";
+import {GatewayShapeStyle} from "../nodes/GatewayNode";
 import {NodeTypes} from "../../../model/NodeTypes";
 import {challengeShapeStyle} from "../nodes/ChallengeNode";
 
@@ -53,13 +53,9 @@ export default function OnCanvasNodesToolbar(props: OnCanvasNodesToolbarProps) {
                 <div style={{ ...activityShapeStyle, marginBottom: 10 }} onClick={() => {
                     handleNodeSelected(NodeTypes.ACTIVITY_NODE)
                 }}/>
-                Decision
-                <div style={{ ...decisionShapeStyle, marginBottom: 15, marginTop: 5 }} onClick={() => {
-                    handleNodeSelected(NodeTypes.DECISION_NODE)
-                }} />
-                Challenge
-                <div style={{ ...challengeShapeStyle, marginBottom: 10 }} onClick={() => {
-                    handleNodeSelected(NodeTypes.CHALLENGE_NODE)
+                Gateway
+                <div style={{ ...GatewayShapeStyle, marginBottom: 15, marginTop: 5 }} onClick={() => {
+                    handleNodeSelected(NodeTypes.GATEWAY_NODE)
                 }} />
             </div>
         </Dialog>
