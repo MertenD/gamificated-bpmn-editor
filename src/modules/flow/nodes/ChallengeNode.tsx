@@ -1,20 +1,45 @@
-import React, {useState} from 'react';
-import {NodeProps} from 'reactflow';
+import React, {memo, useState} from 'react';
+import {NodeProps, ReactFlowProvider} from 'reactflow';
+import {NodeResizer, ResizeDragEvent, ResizeEventParams} from '@reactflow/node-resizer';
+import '@reactflow/node-resizer/dist/style.css';
 
 export type ChallengeNodeData = {
     backgroundColor?: string
 }
 
-export default function ChallengeNode({ id, data }: NodeProps<ChallengeNodeData>) {
+export default memo(function ChallengeNode({ id, selected, data }: NodeProps<ChallengeNodeData>) {
 
+    const minWidth = 400, minHeight = 400
     const [backgroundColor, setBackgroundColor] = useState(data.backgroundColor || "#eeffee")
+    const [width, setWidth] = useState(minWidth)
+    const [height, setHeight] = useState(minHeight)
+
+    const onResize = (event: ResizeDragEvent, params: ResizeEventParams) => {
+        setWidth(params.width)
+        setHeight(params.height)
+    }
 
     return (
-        <div style={{ ...challengeShapeStyle, minWidth: 1000, minHeight: 400, backgroundColor: backgroundColor + "99" }} >
-            Title
-        </div>
+        <>
+            <NodeResizer
+                isVisible={selected}
+                minWidth={minWidth}
+                minHeight={minHeight}
+                onResize={onResize}
+                lineStyle={{
+                    borderWidth: 2
+                }}
+                handleStyle={{
+                    width: 15,
+                    height: 15
+                }}
+            />
+            <div style={{ ...challengeShapeStyle, width: width, height: height, backgroundColor: backgroundColor + "99" }} >
+                Challenge
+            </div>
+        </>
     )
-}
+})
 
 export const challengeShapeStyle = {
     minWidth: 50,

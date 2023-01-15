@@ -166,7 +166,7 @@ function DragAndDropFlow() {
             nodeTypes={nodeTypes}
             selectNodesOnDrag={false}
             defaultEdgeOptions={{
-                type: "step"
+                type: "smoothstep"
             }}
             deleteKeyCode={["Backspace", "Delete"]}
         >
