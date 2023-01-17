@@ -17,7 +17,7 @@ export type ActivityNodeData = {
     gamificationOptions?: PointsGamificationOptionsData | BadgeGamificationOptionsData
 }
 
-export default function ActivityNode({ id, data }: NodeProps<ActivityNodeData>) {
+export default function ActivityNode({ id, selected, data }: NodeProps<ActivityNodeData>) {
 
     const updateNodeData = useStore((state) => state.updateNodeData)
     const [task, setTask] = useState(data.task || "")
@@ -42,7 +42,11 @@ export default function ActivityNode({ id, data }: NodeProps<ActivityNodeData>) 
     }, [id, task, activityType, choices, inputRegex, variableName, gamificationType, gamificationOptions, updateNodeData])
 
     return (
-        <div style={{ ...activityShapeStyle, backgroundColor: data.backgroundColor }}>
+        <div style={{
+            ...activityShapeStyle,
+            backgroundColor: data.backgroundColor || activityShapeStyle.backgroundColor,
+            borderColor: selected ? "blue" : undefined
+        }}>
             <Handle type="source" position={Position.Right}/>
             <Handle type="target" position={Position.Left}/>
             <div style={{
