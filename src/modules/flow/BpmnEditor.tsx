@@ -138,7 +138,9 @@ function DragAndDropFlow() {
     useEffect(() => {
         if (!isDragging) {
             nodes.filter((node: Node) => node.type !== NodeTypes.CHALLENGE_NODE).forEach((node: Node) => {
-                const intersectingChallenges = reactFlowInstance.getIntersectingNodes(node).filter((node) => node.type === NodeTypes.CHALLENGE_NODE)
+                const intersectingChallenges = reactFlowInstance.getIntersectingNodes(node)
+                    .filter((node) => node.type === NodeTypes.CHALLENGE_NODE)
+                    .filter((node) => node.data.isResizing === false)
                 // if the node already is part of a group and did not leave it, leave it as it is and don't change the parent
                 if (node.parentNode !== undefined && intersectingChallenges.map(node => node.id).includes(node.parentNode)) {
                     return
