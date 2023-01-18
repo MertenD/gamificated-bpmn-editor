@@ -1,5 +1,6 @@
 import React from 'react';
 import {Handle, NodeProps, Position} from 'reactflow';
+import {handleStyle} from "../../../store";
 
 export type EndNodeData = {
     backgroundColor?: string
@@ -9,7 +10,7 @@ export default function EndNode({ id, data}: NodeProps<EndNodeData>) {
 
     return (
         <div style={{ ...endNodeShapeStyle, backgroundColor: data.backgroundColor}} >
-            <Handle type="target" position={Position.Left} />
+            <Handle style={handleStyle} type="target" position={Position.Left} />
         </div>
     )
 }

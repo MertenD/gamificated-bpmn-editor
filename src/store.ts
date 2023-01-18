@@ -46,6 +46,11 @@ export const edgeStyle = {
     }
 }
 
+export const handleStyle = {
+    width: 8,
+    height: 8
+}
+
 export const useStore = create<RFState>((set, get) => ({
     nodes: [],
     edges: [],

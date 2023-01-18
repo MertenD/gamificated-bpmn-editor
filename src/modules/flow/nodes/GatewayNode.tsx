@@ -1,6 +1,6 @@
 import React, {useEffect, useState} from 'react';
 import {Handle, NodeProps, Position} from 'reactflow';
-import useStore from "../../../store";
+import useStore, {handleStyle} from "../../../store";
 import {PointsType} from "../../../model/PointsType";
 import {NodeTypes} from "../../../model/NodeTypes";
 
@@ -136,9 +136,9 @@ export default function GatewayNode({ id, data }: NodeProps<GatewayNodeData>) {
                 <hr style={{ backgroundColor: "black", border: "1px solid black", width: "70%", marginTop: 14 }}/>
                 <hr style={{ backgroundColor: "black", border: "1px solid black", width: "70%", marginTop: -10, transform: "rotateY(0deg) rotate(90deg)" }}/>
             </div>
-            <Handle type="target" position={Position.Left} id="a"/>
-            <Handle type="source" position={Position.Top} id="b"/>
-            <Handle type="source" position={Position.Bottom} id="c"/>
+            <Handle style={handleStyle} type="target" position={Position.Left} id="a"/>
+            <Handle style={handleStyle} type="source" position={Position.Top} id="b"/>
+            <Handle style={handleStyle} type="source" position={Position.Bottom} id="c"/>
         </div>
     )
 }
