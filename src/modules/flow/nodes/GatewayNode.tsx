@@ -4,11 +4,12 @@ import useStore, {handleStyle, selectedColor} from "../../../store";
 import {PointsType} from "../../../model/PointsType";
 import {NodeTypes} from "../../../model/NodeTypes";
 import {Comparisons} from "../../../model/Comparisons";
+import ConditionOptions from "../../form/ConditionOptions";
 
 export type GatewayNodeData = {
     backgroundColor?: string
     variableName?: string,
-    comparison?: string,
+    comparison?: Comparisons,
     valueToCompare?: string
 }
 
@@ -19,7 +20,7 @@ export default function GatewayNode({ id, selected, data }: NodeProps<GatewayNod
     const getPreviousNodes = useStore((state) => state.getPreviousNodes)
     const updateNodeData = useStore((state) => state.updateNodeData);
     const [availableVariableNames, setAvailableVariableNames] = useState<string[]>([])
-    const [variableName, setVariableName] = useState(data.variableName || PointsType.EXPERIENCE.valueOf());
+    const [selectedVariable, setSelectedVariable] = useState(data.variableName || PointsType.EXPERIENCE.valueOf());
     const [comparison, setComparison] = useState(data.comparison || Comparisons.EQUALS);
     const [valueToCompare, setValueToCompare] = useState(data.valueToCompare || "");
 
@@ -36,73 +37,48 @@ export default function GatewayNode({ id, selected, data }: NodeProps<GatewayNod
 
     }, [id, nodes, edges, getPreviousNodes])
 
+    /*
+    variablesSelectStyle={{
+                    position: 'fixed',
+                    right: -140,
+                    top: 5
+                }}
+                comparisonSelectStyle={{
+                    position: 'fixed',
+                    right: -191,
+                    top: 5
+                }}
+                valueToCompareInputStyle={{
+                    position: 'fixed',
+                    right: -320,
+                    top: 5
+                }}
+     */
+
     useEffect(() => {
         updateNodeData<GatewayNodeData>(id, {
             backgroundColor: data.backgroundColor,
-            variableName: variableName,
+            variableName: selectedVariable,
             comparison: comparison,
             valueToCompare: valueToCompare
         })
-    }, [id, variableName, comparison, valueToCompare, updateNodeData])
+    }, [id, selectedVariable, comparison, valueToCompare, updateNodeData])
 
     return (
         <div style={{ backgroundColor: "transparent", position: "relative" }}>
-            <select
-                style={{
-                    width: 100,
+            <ConditionOptions
+                variables={ availableVariableNames }
+                selectedVariable={ selectedVariable }
+                onVariableChanged={ newVariable => setSelectedVariable(newVariable) }
+                selectedComparison={ comparison }
+                onComparisonChanges={ newComparison => setComparison(newComparison) }
+                valueToCompare={ valueToCompare }
+                onValueToCompareChanged={ newValueToCompare => setValueToCompare(newValueToCompare) }
+                conditionOptionsSpanStyle={{
                     position: 'fixed',
-                    right: -120,
+                    right: -60,
                     top: 5
                 }}
-                value={variableName}
-                name="variableName"
-                id="variableName"
-                className="nodrag"
-                onChange={(event) => {
-                    setVariableName(event.target.value)
-                }}
-            >
-                {
-                    availableVariableNames.map(name => {
-                        return <option key={name} value={name}>{ name }</option>
-                    })
-                }
-            </select>
-            <select
-                style={{
-                    width: 50,
-                    position: 'fixed',
-                    right: -180,
-                    top: 5
-                }}
-                defaultValue={comparison}
-                name="comparison"
-                id="comparison"
-                className="nodrag"
-                onChange={(event) => {
-                    setComparison(event.target.value)
-                }}
-            >
-                {
-                    Object.values(Comparisons).map(comparison => {
-                        return <option key={comparison.valueOf()} value={comparison}>{ comparison.valueOf() }</option>
-                    })
-                }
-            </select>
-            <input
-                style={{
-                    width: 100,
-                    position: 'fixed',
-                    right: -300,
-                    top: 5
-                }}
-                type="text"
-                placeholder="Other value"
-                defaultValue={valueToCompare}
-                className="nodrag"
-                onChange={(event) =>
-                    setValueToCompare(event.target.value)
-                }
             />
             <div
                 style={{

@@ -33,7 +33,7 @@ export type RFState = {
     updateNodeParent: (nodeId: Node, newParent: Node | undefined, oldParent: Node | undefined) => void;
 }
 
-export const selectedColor = "#db3e00"
+export const selectedColor = "blue"
 
 export const edgeStyle = {
     markerEnd: {

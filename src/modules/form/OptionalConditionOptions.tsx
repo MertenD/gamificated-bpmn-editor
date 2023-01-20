@@ -12,6 +12,7 @@ export interface OptionalConditionOptionsProps {
     onComparisonChanges: (newComparison: Comparisons) => void
     valueToCompare: string
     onValueToCompareChanged: (newValueToCompare: string) => void
+    conditionOptionsSpanStyle?: any
 }
 
 export default function OptionalConditionOptions(props: OptionalConditionOptionsProps) {
@@ -31,13 +32,14 @@ export default function OptionalConditionOptions(props: OptionalConditionOptions
             </div>
             { props.hasCondition && (
                 <ConditionOptions
-                    variables={props.variables}
-                    selectedVariable={props.selectedVariable}
+                    variables={ props.variables }
+                    selectedVariable={ props.selectedVariable }
                     onVariableChanged={ newVariable => props.onVariableChanged(newVariable) }
                     selectedComparison={ props.selectedComparison }
                     onComparisonChanges={ newComparison => props.onComparisonChanges(newComparison) }
                     valueToCompare={ props.valueToCompare }
                     onValueToCompareChanged={ newValueToCompare => props.onValueToCompareChanged(newValueToCompare) }
+                    conditionOptionsSpanStyle={ props.conditionOptionsSpanStyle }
                 />
             )}
         </>

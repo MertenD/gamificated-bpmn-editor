@@ -3,7 +3,6 @@ import {BadgeType} from "../../model/BadgeType";
 import {PointsType} from "../../model/PointsType";
 import useStore from "../../store";
 import {NodeTypes} from "../../model/NodeTypes";
-import ConditionOptions from "../form/ConditionOptions";
 import OptionalConditionOptions from "../form/OptionalConditionOptions";
 
 enum Comparisons {

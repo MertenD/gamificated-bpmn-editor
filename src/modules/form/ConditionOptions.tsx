@@ -9,9 +9,7 @@ export interface ConditionOptionsProps {
     onComparisonChanges: (newComparison: Comparisons) => void
     valueToCompare: string
     onValueToCompareChanged: (newValueToCompare: string) => void
-    variablesSelectStyle?: any
-    comparisonSelectStyle?: any
-    valueToCompareInputStyle?: any
+    conditionOptionsSpanStyle?: any
 }
 
 export default function ConditionOptions(props: ConditionOptionsProps) {
@@ -22,11 +20,10 @@ export default function ConditionOptions(props: ConditionOptionsProps) {
             display: "flex",
             flexDirection: "row",
             justifyContent: "space-between",
-            marginBottom: 10
+            ...props.conditionOptionsSpanStyle
         }}>
             <select
                 style={{
-                    ...props.variablesSelectStyle,
                     width: 120
                 }}
                 value={props.selectedVariable}
@@ -45,7 +42,6 @@ export default function ConditionOptions(props: ConditionOptionsProps) {
             </select>
             <select
                 style={{
-                    ...props.comparisonSelectStyle,
                     width: 50
                 }}
                 defaultValue={props.selectedComparison}
@@ -64,7 +60,6 @@ export default function ConditionOptions(props: ConditionOptionsProps) {
             </select>
             <input
                 style={{
-                    ...props.valueToCompareInputStyle,
                     width: 120
                 }}
                 type="text"
