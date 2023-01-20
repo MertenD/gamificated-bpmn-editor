@@ -9,7 +9,7 @@ import DropdownOption from "../../form/DropdownOption";
 import TextOption from "../../form/TextOption";
 import OptionsContainer from "../../form/OptionsContainer";
 import TitleOption from "../../form/TitleOption";
-import GamificationOptions from "../../form/GamificationOptions";
+import GamificationOptions from "../../gamification/GamificationOptions";
 
 export type ActivityNodeData = {
     backgroundColor?: string,

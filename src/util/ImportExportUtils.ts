@@ -21,7 +21,7 @@ export const onLoad = (changeEvent: any, reactFlowInstance: ReactFlowInstance) =
             const bpmnDto = JSON.parse(String(progressEvent.target.result)) as BpmnDto
 
             // This whole process changes the id's of the nodes and adapts the edges as well to that change.
-            // This is necessary so that the loaded nodes will be re-rendered and the loaded data is loaded into the node component
+            // This is necessary so that the loaded nodes will be re-rendered and the loaded data is loaded into the node components
             const newIdPairs = bpmnDto.nodes.reduce((accumulator: Record<string, string>, node) => {
                 accumulator[node.id] = uuidv4()
                 return accumulator;

@@ -7,7 +7,7 @@ import OptionsContainer from "../../form/OptionsContainer";
 import DropdownOption from "../../form/DropdownOption";
 import {ChallengeType} from "../../../model/ChallengeType";
 import {GamificationType} from "../../../model/GamificationType";
-import GamificationOptions from "../../form/GamificationOptions";
+import GamificationOptions from "../../gamification/GamificationOptions";
 import {PointsGamificationOptionsData} from "../../gamification/PointsGamificationOptions";
 import {BadgeGamificationOptionsData} from "../../gamification/BadgeGamificationOptions";
 import NumberOption from "../../form/NumberOption";

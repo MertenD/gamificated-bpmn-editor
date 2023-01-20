@@ -1,7 +1,7 @@
 import React from "react"
 import {GamificationType} from "../../model/GamificationType";
-import PointsGamificationOptions, {PointsGamificationOptionsData} from "../gamification/PointsGamificationOptions";
-import BadgeGamificationOptions, {BadgeGamificationOptionsData} from "../gamification/BadgeGamificationOptions";
+import PointsGamificationOptions, {PointsGamificationOptionsData} from "./PointsGamificationOptions";
+import BadgeGamificationOptions, {BadgeGamificationOptionsData} from "./BadgeGamificationOptions";
 
 export interface GamificationTypeOptionsProps {
     parentNodeId: string
