@@ -3,12 +3,24 @@ import {NodeProps} from 'reactflow';
 import {NodeResizer, ResizeDragEvent, ResizeEventParams} from '@reactflow/node-resizer';
 import '@reactflow/node-resizer/dist/style.css';
 import useStore, {selectedColor} from "../../../store";
+import OptionsContainer from "../../form/OptionsContainer";
+import DropdownOption from "../../form/DropdownOption";
+import {ChallengeType} from "../../../model/ChallengeType";
+import {GamificationType} from "../../../model/GamificationType";
+import GamificationOptions from "../../form/GamificationOptions";
+import {PointsGamificationOptionsData} from "../../gamification/PointsGamificationOptions";
+import {BadgeGamificationOptionsData} from "../../gamification/BadgeGamificationOptions";
+import NumberOption from "../../form/NumberOption";
 
 export type ChallengeNodeData = {
     width?: number,
     height?: number,
     backgroundColor?: string
     isResizing?: boolean
+    challengeType?: ChallengeType
+    secondsToComplete?: number
+    rewardType?: GamificationType
+    gamificationOptions?: PointsGamificationOptionsData | BadgeGamificationOptionsData
 }
 
 export default memo(function ChallengeNode({ id, selected, data }: NodeProps<ChallengeNodeData>) {
@@ -24,15 +36,23 @@ export default memo(function ChallengeNode({ id, selected, data }: NodeProps<Cha
     const [backgroundColor, setBackgroundColor] = useState(data.backgroundColor || "#eeffee")
     const [width, setWidth] = useState(data.width || defaultWidth)
     const [height, setHeight] = useState(data.height || defaultHeight)
+    const [challengeType, setChallengeType] = useState(data.challengeType || ChallengeType.TIME_CHALLENGE)
+    const [secondsToComplete, setSecondsToComplete] = useState(data.secondsToComplete || 30)
+    const [rewardType, setRewardType] = useState(data.rewardType || GamificationType.NONE)
+    const [gamificationOptions, setGamificationOptions] = useState( data.gamificationOptions || {})
 
     useEffect(() => {
         updateNodeData<ChallengeNodeData>(id, {
             width: width,
             height: height,
             backgroundColor: backgroundColor,
-            isResizing: isResizing
+            isResizing: isResizing,
+            challengeType: challengeType,
+            secondsToComplete: secondsToComplete,
+            rewardType: rewardType,
+            gamificationOptions: gamificationOptions
         })
-    }, [width, height, backgroundColor, isResizing])
+    }, [width, height, backgroundColor, isResizing, challengeType, secondsToComplete, rewardType, gamificationOptions])
 
     const onResizeStart = () => {
         setIsResizing(true)
@@ -74,7 +94,42 @@ export default memo(function ChallengeNode({ id, selected, data }: NodeProps<Cha
                 }}
             />
             <div style={{ ...challengeShapeStyle, width: width, height: height, backgroundColor: backgroundColor + "99" }} >
-                Challenge
+                <OptionsContainer outline={true}>
+                    <DropdownOption
+                        title={ "Challenge type" }
+                        values={ Object.values(ChallengeType) }
+                        selectedValue={ challengeType }
+                        onValueChanged={ newValue => setChallengeType(newValue as ChallengeType) }
+                    />
+                    {
+                        (() => {
+                            switch (challengeType) {
+                                case ChallengeType.TIME_CHALLENGE:
+                                    return (
+                                        <NumberOption
+                                            title={ "Time to complete" }
+                                            placeholder={ "Seconds" }
+                                            value={ secondsToComplete }
+                                            onValueChanged={ newValue => setSecondsToComplete(newValue) }
+                                        />
+                                    )
+                            }
+                        })()
+                    }
+                    <DropdownOption
+                        title={ "Reward type" }
+                        values={ Object.values(GamificationType) }
+                        selectedValue={ rewardType }
+                        onValueChanged={ newValue => setRewardType(newValue as GamificationType) }
+                    />
+                    <GamificationOptions
+                        parentNodeId={ id }
+                        gamificationType={ rewardType }
+                        gamificationOptions={ gamificationOptions }
+                        onChange={ gamificationOptions => setGamificationOptions(gamificationOptions) }
+                        withoutOptionalCondition={true}
+                    />
+                </OptionsContainer>
             </div>
         </>
     )

@@ -2,13 +2,14 @@ import React, {useEffect, useState} from 'react';
 import {Handle, NodeProps, Position} from 'reactflow';
 import useStore, {handleStyle, selectedColor} from "../../../store";
 import {GamificationType} from "../../../model/GamificationType";
-import PointsGamificationOptions, {PointsGamificationOptionsData} from "../../gamification/PointsGamificationOptions";
+import {PointsGamificationOptionsData} from "../../gamification/PointsGamificationOptions";
 import {ActivityType} from "../../../model/ActivityType";
-import BadgeGamificationOptions, {BadgeGamificationOptionsData} from "../../gamification/BadgeGamificationOptions";
+import {BadgeGamificationOptionsData} from "../../gamification/BadgeGamificationOptions";
 import DropdownOption from "../../form/DropdownOption";
 import TextOption from "../../form/TextOption";
 import OptionsContainer from "../../form/OptionsContainer";
 import TitleOption from "../../form/TitleOption";
+import GamificationOptions from "../../form/GamificationOptions";
 
 export type ActivityNodeData = {
     backgroundColor?: string,
@@ -104,30 +105,13 @@ export default function ActivityNode({ id, selected, data }: NodeProps<ActivityN
                     selectedValue={ gamificationType }
                     onValueChanged={ newValue => setGamificationType(newValue as GamificationType) }
                 />
-                {
-                    (() => {
-                        switch (gamificationType) {
-                            case (GamificationType.POINTS):
-                                return <PointsGamificationOptions
-                                    nodeId={id}
-                                    parentVariableName={variableName}
-                                    gamificationOptions={gamificationOptions as PointsGamificationOptionsData}
-                                    onChange={(gamificationOptions: PointsGamificationOptionsData) => {
-                                        setGamificationOptions(gamificationOptions)
-                                    }}
-                                />
-                            case GamificationType.BADGES:
-                                return <BadgeGamificationOptions
-                                    nodeId={id}
-                                    parentVariableName={variableName}
-                                    gamificationOptions={gamificationOptions as BadgeGamificationOptionsData}
-                                    onChange={(gamificationOptions: BadgeGamificationOptionsData) => {
-                                        setGamificationOptions(gamificationOptions)
-                                    }}
-                                />
-                        }
-                    })()
-                }
+                <GamificationOptions
+                    parentNodeId={ id }
+                    gamificationType={ gamificationType }
+                    parentVariableName={ variableName }
+                    gamificationOptions={ gamificationOptions }
+                    onChange={ gamificationOptions => setGamificationOptions(gamificationOptions) }
+                />
             </OptionsContainer>
         </div>
     )

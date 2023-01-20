@@ -23,10 +23,11 @@ export type BadgeGamificationOptionsData = {
 }
 
 interface BadgeGamificationOptionsProps {
-    nodeId: string,
+    parentNodeId: string,
     parentVariableName: string,
     gamificationOptions: BadgeGamificationOptionsData
     onChange: (gamificationOptions: BadgeGamificationOptionsData) => void
+    withoutOptionalCondition?: boolean
 }
 
 export default function BadgeGamificationOptions(props: BadgeGamificationOptionsProps) {
@@ -42,8 +43,8 @@ export default function BadgeGamificationOptions(props: BadgeGamificationOptions
     const [valueToCompare, setValueToCompare] = useState(props.gamificationOptions.valueToCompare || "");
 
     useEffect(() => {
-        setAvailableVariableNames(getAvailableVariableNames(props.nodeId, props.parentVariableName))
-    }, [props.nodeId, props.parentVariableName, nodes, edges])
+        setAvailableVariableNames(getAvailableVariableNames(props.parentNodeId, props.parentVariableName))
+    }, [props.parentNodeId, props.parentVariableName, nodes, edges])
 
     useEffect(() => {
         props.onChange({
@@ -63,7 +64,7 @@ export default function BadgeGamificationOptions(props: BadgeGamificationOptions
                 selectedValue={ badgeType }
                 onValueChanged={ newValue => setBadgeType(newValue as BadgeType) }
             />
-            <OptionalConditionOption
+            { (props.withoutOptionalCondition === undefined || !props.withoutOptionalCondition) && <OptionalConditionOption
                 hasCondition={hasCondition}
                 setHasCondition={ newValue => setHasCondition(newValue) }
                 variables={availableVariableNames}
@@ -73,7 +74,7 @@ export default function BadgeGamificationOptions(props: BadgeGamificationOptions
                 onComparisonChanges={ newComparison => setComparison(newComparison) }
                 valueToCompare={ valueToCompare }
                 onValueToCompareChanged={ newValueToCompare => setValueToCompare(newValueToCompare) }
-            />
+            /> }
         </>
     )
 }
