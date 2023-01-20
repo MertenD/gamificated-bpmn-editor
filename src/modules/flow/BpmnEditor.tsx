@@ -76,8 +76,6 @@ function DragAndDropFlow() {
             const targetIsPane = event.target.classList.contains('react-flow__pane');
             const targetIsChallengeNode = event.target.parentElement.classList.contains("react-flow__node-challengeNode")
 
-            console.log(event)
-
             if ((targetIsPane || targetIsChallengeNode) && connectStartParams.current?.handleType === "source" && reactFlowWrapper.current !== null) {
                 // @ts-ignore
                 const { top, left } = reactFlowWrapper.current.getBoundingClientRect();
@@ -151,15 +149,12 @@ function DragAndDropFlow() {
                 }
                 // If the node had no parent it will be added
                 if (intersectingChallenges[0] !== undefined && node.parentNode === undefined) {
-                    console.log("no prev parent")
                     updateNodeParent(node, intersectingChallenges[0], undefined)
                 // If the node had a parent and was moved to another parent
                 } else if (intersectingChallenges[0] !== undefined && node.parentNode !== undefined && node.parentNode !== intersectingChallenges[0].id) {
-                    console.log("to another parent")
                     updateNodeParent(node, intersectingChallenges[0], getNodeById(node.parentNode))
                 // If the node had a parent it will be removed
                 } else if (intersectingChallenges[0] === undefined && node.parentNode !== undefined) {
-                    console.log("no more parent")
                     updateNodeParent(node, undefined, getNodeById(node.parentNode))
                 }
             })
