@@ -3,6 +3,7 @@ import {BadgeType} from "../../model/BadgeType";
 import {PointsType} from "../../model/PointsType";
 import useStore from "../../store";
 import OptionalConditionOption from "../form/OptionalConditionOption";
+import DropdownOption from "../form/DropdownOption";
 
 enum Comparisons {
     EQUALS = "=",
@@ -56,31 +57,12 @@ export default function BadgeGamificationOptions(props: BadgeGamificationOptions
 
     return (
         <>
-            <span style={{
-                width: "100%",
-                display: "flex",
-                flexDirection: "row",
-                justifyContent: "space-between",
-                marginBottom: 10
-            }}>
-                { "Badge Type: " }
-                <select
-                    defaultValue={badgeType}
-                    name="badgeType"
-                    id="badgeType"
-                    className="nodrag"
-                    onChange={(event) => {
-                        // @ts-ignore
-                        setBadgeType(event.target.value)
-                    }}
-                >
-                    {
-                        Object.values(BadgeType).map(type => {
-                            return <option key={type.valueOf()} value={type}>{ type.valueOf() }</option>
-                        })
-                    }
-                </select>
-            </span>
+            <DropdownOption
+                title={ "Badge type" }
+                values={ Object.values(BadgeType) }
+                value={ badgeType }
+                onValueChanged={ newValue => setBadgeType(newValue as BadgeType) }
+            />
             <OptionalConditionOption
                 hasCondition={hasCondition}
                 setHasCondition={ newValue => setHasCondition(newValue) }

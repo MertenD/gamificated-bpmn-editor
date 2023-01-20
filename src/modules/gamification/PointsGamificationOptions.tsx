@@ -3,6 +3,7 @@ import {PointsType} from "../../model/PointsType";
 import OptionalConditionOption from "../form/OptionalConditionOption";
 import {Comparisons} from "../../model/Comparisons";
 import useStore from "../../store";
+import DropdownOption from "../form/DropdownOption";
 
 export type PointsGamificationOptionsData = {
     pointType?: PointsType,
@@ -50,31 +51,12 @@ export default function PointsGamificationOptions(props: PointsGamificationOptio
 
     return (
         <>
-            <span style={{
-                width: "100%",
-                display: "flex",
-                flexDirection: "row",
-                justifyContent: "space-between",
-                marginBottom: 10
-            }}>
-                { "Point Type: " }
-                <select
-                    defaultValue={pointType}
-                    name="pointType"
-                    id="pointType"
-                    className="nodrag"
-                    onChange={(event) => {
-                        // @ts-ignore
-                        setPointType(event.target.value)
-                    }}
-                >
-                    {
-                        Object.values(PointsType).map(type => {
-                            return <option key={type.valueOf()} value={type}>{ type.valueOf() }</option>
-                        })
-                    }
-                </select>
-            </span>
+            <DropdownOption
+                title={ "Point type" }
+                values={ Object.values(PointsType) }
+                value={ pointType }
+                onValueChanged={ newValue => setPointType(newValue as PointsType) }
+            />
             <span style={{
                 width: "100%",
                 display: "flex",
