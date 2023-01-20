@@ -16,6 +16,7 @@ export default function ConditionOption(props: ConditionOptionsProps) {
 
     return (
         <span style={{
+            flexWrap: "wrap",
             width: "100%",
             display: "flex",
             flexDirection: "row",

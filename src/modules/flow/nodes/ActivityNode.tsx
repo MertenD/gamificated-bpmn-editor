@@ -5,6 +5,10 @@ import {GamificationType} from "../../../model/GamificationType";
 import PointsGamificationOptions, {PointsGamificationOptionsData} from "../../gamification/PointsGamificationOptions";
 import {ActivityType} from "../../../model/ActivityType";
 import BadgeGamificationOptions, {BadgeGamificationOptionsData} from "../../gamification/BadgeGamificationOptions";
+import DropdownOption from "../../form/DropdownOption";
+import TextOption from "../../form/TextOption";
+import OptionsContainer from "../../form/OptionsContainer";
+import TitleOption from "../../form/TitleOption";
 
 export type ActivityNodeData = {
     backgroundColor?: string,
@@ -49,134 +53,57 @@ export default function ActivityNode({ id, selected, data }: NodeProps<ActivityN
         }}>
             <Handle style={handleStyle} type="source" position={Position.Right}/>
             <Handle style={handleStyle} type="target" position={Position.Left}/>
-            <div style={{
-                width: 300,
-                padding: 20,
-                display: "flex",
-                flexDirection: "column",
-                alignItems: 'center',
-                justifyContent: 'center',
-                flexWrap: "wrap"
-            }}>
-                <input
-                    style={{ width: "100%", marginBottom: 10 }}
-                    type="text"
-                    placeholder="Task"
-                    defaultValue={task}
-                    className="nodrag"
-                    onChange={(event) => {
-                        setTask(event.target.value)
-                    }}
+            <OptionsContainer>
+                <TitleOption
+                    placeholder={ "Task title" }
+                    value={ task }
+                    onValueChanged={ newValue => setTask(newValue) }
                 />
                 <hr style={{ width: "100%" }}/>
-                <span style={{
-                    width: "100%",
-                    display: "flex",
-                    flexDirection: "row",
-                    justifyContent: "space-between",
-                    marginBottom: 10
-                }}>
-                    { "Activity type: " }
-                    <select
-                        defaultValue={activityType}
-                        name="activityType"
-                        id="activityType"
-                        className="nodrag"
-                        onChange={(event) => {
-                            // @ts-ignore
-                            setActivityType(event.target.value)
-                        }}
-                    >
-                        {
-                            Object.values(ActivityType).map(type => {
-                                return <option key={type.valueOf()} value={type}>{ type.valueOf() }</option>
-                            })
-                        }
-                    </select>
-                </span>
+                <DropdownOption
+                    title={ "Activity type" }
+                    values={ Object.values(ActivityType) }
+                    selectedValue={ activityType }
+                    onValueChanged={ newValue => setActivityType(newValue as ActivityType) }
+                />
                 {
                     (() => {
                         switch (activityType) {
                             case ActivityType.TEXT_INPUT:
                                 return (
-                                    <input
-                                        style={{
-                                            width: "100%",
-                                            marginBottom: 10
-                                        }}
-                                        type="text"
-                                        placeholder="Regex for correct input"
-                                        value={inputRegex}
-                                        className="nodrag"
-                                        onChange={(event) => {
-                                            setInputRegex(event.target.value)
-                                        }}
+                                    <TextOption
+                                        title={ "Input regex" }
+                                        placeholder={ "e.g.: [0-9]+" }
+                                        value={ inputRegex }
+                                        onValueChanged={ newValue => setInputRegex(newValue) }
                                     />
                                 )
                             case ActivityType.SINGLE_CHOICE:
                             case ActivityType.MULTIPLE_CHOICE:
                                 return (
-                                    <input
-                                        style={{
-                                            width: "100%",
-                                            marginBottom: 10
-                                        }}
-                                        type="text"
-                                        placeholder="Choices (1,2,...)"
-                                        value={choices}
-                                        className="nodrag"
-                                        onChange={(event) => {
-                                            setChoices(event.target.value)
-                                        }}
+                                    <TextOption
+                                        title={ "Choices" }
+                                        placeholder={ "choice 1,choice 2,..."}
+                                        value={ choices }
+                                        onValueChanged={ newValue => setChoices(newValue) }
                                     />
                                 )
                         }
                     })()
                 }
-                <span style={{
-                    width: "100%",
-                    display: "flex",
-                    flexDirection: "row",
-                    justifyContent: "space-between",
-                    marginBottom: 10
-                }}>
-                    { "Save input as: " }
-                    <input
-                        type="text"
-                        placeholder="Variable name"
-                        defaultValue={variableName}
-                        className="nodrag"
-                        onChange={(event) => {
-                            setVariableName(event.target.value)
-                        }}
-                    />
-                </span>
+                <TextOption
+                    title={ "Save input as" }
+                    placeholder={ "Variable name" }
+                    value={ variableName }
+                    onValueChanged={ newValue => setVariableName(newValue) }
+                />
                 <hr style={{ width: "100%" }}/>
-                <span style={{
-                    width: "100%",
-                    display: "flex",
-                    flexDirection: "row",
-                    justifyContent: "space-between",
-                    marginBottom: 10
-                }}>
-                    { "Gamification type: " }
-                    <select
-                        defaultValue={gamificationType}
-                        name="gamificationType"
-                        id="gamificationType"
-                        className="nodrag"
-                        onChange={(event) => {
-                            // @ts-ignore
-                            setGamificationType(event.target.value)
-                        }}
-                    >
-                        {
-                            Object.values(GamificationType).map(type => {
-                                return <option key={type.valueOf()} value={type}>{ type.valueOf() }</option>
-                            })
-                        }
-                    </select>
-                </span>
+                <DropdownOption
+                    title={ "Gamification type" }
+                    values={ Object.values(GamificationType) }
+                    selectedValue={ gamificationType }
+                    onValueChanged={ newValue => setGamificationType(newValue as GamificationType) }
+                />
                 {
                     (() => {
                         switch (gamificationType) {
@@ -201,7 +128,7 @@ export default function ActivityNode({ id, selected, data }: NodeProps<ActivityN
                         }
                     })()
                 }
-            </div>
+            </OptionsContainer>
         </div>
     )
 }

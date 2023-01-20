@@ -60,7 +60,7 @@ export default function BadgeGamificationOptions(props: BadgeGamificationOptions
             <DropdownOption
                 title={ "Badge type" }
                 values={ Object.values(BadgeType) }
-                value={ badgeType }
+                selectedValue={ badgeType }
                 onValueChanged={ newValue => setBadgeType(newValue as BadgeType) }
             />
             <OptionalConditionOption

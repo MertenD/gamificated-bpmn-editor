@@ -11,6 +11,7 @@ export default function NumberOption(props: NumberOptionProps) {
 
     return (
         <span style={{
+            flexWrap: "wrap",
             width: "100%",
             display: "flex",
             flexDirection: "row",
@@ -19,6 +20,9 @@ export default function NumberOption(props: NumberOptionProps) {
         }}>
             { props.title + ":" }
             <input
+                style={{
+                    marginLeft: 10
+                }}
                 type="number"
                 placeholder={ props.placeholder }
                 defaultValue={ props.value }

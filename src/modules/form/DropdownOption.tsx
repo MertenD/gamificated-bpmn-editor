@@ -3,7 +3,7 @@ import React from "react"
 export interface DropdownOptionProps {
     title: string
     values: string[]
-    value: string
+    selectedValue: string
     onValueChanged: (newValue: string) => void
 }
 
@@ -11,6 +11,7 @@ export default function DropdownOption(props: DropdownOptionProps) {
 
     return (
         <span style={{
+            flexWrap: "wrap",
             width: "100%",
             display: "flex",
             flexDirection: "row",
@@ -19,7 +20,11 @@ export default function DropdownOption(props: DropdownOptionProps) {
         }}>
             { props.title + ":" }
             <select
-                defaultValue={props.value}
+                style={{
+                    marginLeft: 10,
+                    width: "50%"
+                }}
+                defaultValue={props.selectedValue}
                 className="nodrag"
                 onChange={(event) => {
                     props.onValueChanged(event.target.value)

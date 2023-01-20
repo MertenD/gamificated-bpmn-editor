@@ -55,7 +55,7 @@ export default function PointsGamificationOptions(props: PointsGamificationOptio
             <DropdownOption
                 title={ "Point type" }
                 values={ Object.values(PointsType) }
-                value={ pointType }
+                selectedValue={ pointType }
                 onValueChanged={ newValue => setPointType(newValue as PointsType) }
             />
             <NumberOption
