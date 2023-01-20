@@ -5,6 +5,7 @@ import {GatewayShapeStyle} from "../nodes/GatewayNode";
 import {endNodeShapeStyle} from "../nodes/EndNode";
 import {NodeTypes} from "../../../model/NodeTypes";
 import {challengeShapeStyle} from "../nodes/ChallengeNode";
+import {infoNodeShapeStyle} from "../nodes/InfoNode";
 
 export default function NodesToolbar() {
     const onDragStart = (event: any, nodeType: String, nodeData: any) => {
@@ -43,6 +44,10 @@ export default function NodesToolbar() {
                 Challenge
                 <div draggable style={{ ...challengeShapeStyle, marginBottom: 10 }} onDragStart={(event) => {
                     onDragStart(event, NodeTypes.CHALLENGE_NODE, { backgroundColor: "#eeffee"})
+                }} />
+                Info
+                <div draggable style={{ ...infoNodeShapeStyle, marginBottom: 10 }} onDragStart={(event) => {
+                    onDragStart(event, NodeTypes.INFO_NODE, {})
                 }} />
             </div>
         </aside>

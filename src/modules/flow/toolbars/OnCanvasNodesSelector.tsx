@@ -6,6 +6,7 @@ import {activityShapeStyle} from "../nodes/ActivityNode";
 import {GatewayShapeStyle} from "../nodes/GatewayNode";
 import {NodeTypes} from "../../../model/NodeTypes";
 import {challengeShapeStyle} from "../nodes/ChallengeNode";
+import {infoNodeShapeStyle} from "../nodes/InfoNode";
 
 export interface OnCanvasNodesToolbarProps {
     open: boolean;
@@ -56,6 +57,10 @@ export default function OnCanvasNodesToolbar(props: OnCanvasNodesToolbarProps) {
                 Gateway
                 <div style={{ ...GatewayShapeStyle, marginBottom: 15, marginTop: 5 }} onClick={() => {
                     handleNodeSelected(NodeTypes.GATEWAY_NODE)
+                }} />
+                Info
+                <div style={{ ...infoNodeShapeStyle, marginBottom: 15 }} onClick={() => {
+                    handleNodeSelected(NodeTypes.INFO_NODE)
                 }} />
             </div>
         </Dialog>

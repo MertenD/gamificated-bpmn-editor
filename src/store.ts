@@ -20,6 +20,7 @@ import EndNode from "./modules/flow/nodes/EndNode";
 import ChallengeNode from "./modules/flow/nodes/ChallengeNode";
 import {NodeTypes} from "./model/NodeTypes";
 import {PointsType} from "./model/PointsType";
+import InfoNode from "./modules/flow/nodes/InfoNode";
 
 export type RFState = {
     nodes: Node[];
@@ -63,7 +64,8 @@ export const useStore = create<RFState>((set, get) => ({
         startNode: StartNode,
         endNode: EndNode,
         gatewayNode: GatewayNode,
-        challengeNode: ChallengeNode
+        challengeNode: ChallengeNode,
+        infoNode: InfoNode
     },
     onNodesChange: (changes: NodeChange[]) => {
         // Ungroup group if the deleted node is a group so the children are not deleted with the group
