@@ -182,6 +182,8 @@ export default function ActivityNode({ id, selected, data }: NodeProps<ActivityN
                         switch (gamificationType) {
                             case (GamificationType.POINTS):
                                 return <PointsGamificationOptions
+                                    nodeId={id}
+                                    parentVariableName={variableName}
                                     gamificationOptions={gamificationOptions as PointsGamificationOptionsData}
                                     onChange={(gamificationOptions: PointsGamificationOptionsData) => {
                                         setGamificationOptions(gamificationOptions)

@@ -12,7 +12,7 @@ export interface ConditionOptionsProps {
     conditionOptionsSpanStyle?: any
 }
 
-export default function ConditionOptions(props: ConditionOptionsProps) {
+export default function ConditionOption(props: ConditionOptionsProps) {
 
     return (
         <span style={{

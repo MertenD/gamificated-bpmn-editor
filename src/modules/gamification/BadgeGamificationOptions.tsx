@@ -2,8 +2,7 @@ import React, {useEffect, useState} from "react"
 import {BadgeType} from "../../model/BadgeType";
 import {PointsType} from "../../model/PointsType";
 import useStore from "../../store";
-import {NodeTypes} from "../../model/NodeTypes";
-import OptionalConditionOptions from "../form/OptionalConditionOptions";
+import OptionalConditionOption from "../form/OptionalConditionOption";
 
 enum Comparisons {
     EQUALS = "=",
@@ -31,10 +30,9 @@ interface BadgeGamificationOptionsProps {
 
 export default function BadgeGamificationOptions(props: BadgeGamificationOptionsProps) {
 
-    const getPreviousNodes = useStore((state) => state.getPreviousNodes)
-
     const nodes = useStore((state) => state.nodes)
     const edges = useStore((state) => state.edges)
+    const getAvailableVariableNames = useStore((state) => state.getAvailableVariableNames)
     const [availableVariableNames, setAvailableVariableNames] = useState<string[]>([])
     const [badgeType, setBadgeType] = useState(props.gamificationOptions.badgeType || BadgeType.EXPLORER_BATCH)
     const [hasCondition, setHasCondition] = useState<boolean>(props.gamificationOptions.hasCondition || false)
@@ -43,17 +41,7 @@ export default function BadgeGamificationOptions(props: BadgeGamificationOptions
     const [valueToCompare, setValueToCompare] = useState(props.gamificationOptions.valueToCompare || "");
 
     useEffect(() => {
-        // Get all available variable names from all previous nodes that are no decision nodes
-        // also add the points type names
-        setAvailableVariableNames(Array.from(new Set(
-            getPreviousNodes(props.nodeId)
-                .filter((node) => node.type !== NodeTypes.GATEWAY_NODE)
-                .map((node) => node.data.variableName)
-                .concat(props.parentVariableName)
-                .filter(name => name !== undefined && name !== "")
-                .concat(Object.values(PointsType).map(type => "PT:" + type))
-        )))
-
+        setAvailableVariableNames(getAvailableVariableNames(props.nodeId, props.parentVariableName))
     }, [props.nodeId, props.parentVariableName, nodes, edges])
 
     useEffect(() => {
@@ -93,7 +81,7 @@ export default function BadgeGamificationOptions(props: BadgeGamificationOptions
                     }
                 </select>
             </span>
-            <OptionalConditionOptions
+            <OptionalConditionOption
                 hasCondition={hasCondition}
                 setHasCondition={ newValue => setHasCondition(newValue) }
                 variables={availableVariableNames}

@@ -19,6 +19,7 @@ import GatewayNode from "./modules/flow/nodes/GatewayNode";
 import EndNode from "./modules/flow/nodes/EndNode";
 import ChallengeNode from "./modules/flow/nodes/ChallengeNode";
 import {NodeTypes} from "./model/NodeTypes";
+import {PointsType} from "./model/PointsType";
 
 export type RFState = {
     nodes: Node[];
@@ -31,6 +32,7 @@ export type RFState = {
     getNodeById: (nodeId: string) => Node | null;
     getChildren: (nodeId: string) => Node[];
     updateNodeParent: (nodeId: Node, newParent: Node | undefined, oldParent: Node | undefined) => void;
+    getAvailableVariableNames: (ownNodeId: string, ownVariableName: string) => string[];
 }
 
 export const selectedColor = "blue"
@@ -169,6 +171,18 @@ export const useStore = create<RFState>((set, get) => ({
                 return node
             })
         })
+    },
+    getAvailableVariableNames: (ownNodeId: string, ownVariableName: string): string[] => {
+        // Get all available variable names from all previous nodes that are no decision nodes
+        // also add the points type names
+        return Array.from(new Set(
+            get().getPreviousNodes(ownNodeId)
+                .filter((node) => node.type !== NodeTypes.GATEWAY_NODE)
+                .map((node) => node.data.variableName)
+                .concat(ownVariableName)
+                .filter(name => name !== undefined && name !== "")
+                .concat(Object.values(PointsType).map(type => "PT:" + type))
+        ))
     }
 }));
 

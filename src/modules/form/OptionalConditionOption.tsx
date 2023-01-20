@@ -1,6 +1,6 @@
 import React from "react"
 import {Comparisons} from "../../model/Comparisons";
-import ConditionOptions from "./ConditionOptions";
+import ConditionOption from "./ConditionOption";
 
 export interface OptionalConditionOptionsProps {
     hasCondition: boolean
@@ -15,7 +15,7 @@ export interface OptionalConditionOptionsProps {
     conditionOptionsSpanStyle?: any
 }
 
-export default function OptionalConditionOptions(props: OptionalConditionOptionsProps) {
+export default function OptionalConditionOption(props: OptionalConditionOptionsProps) {
 
     return (
         <>
@@ -31,7 +31,7 @@ export default function OptionalConditionOptions(props: OptionalConditionOptions
                 />
             </div>
             { props.hasCondition && (
-                <ConditionOptions
+                <ConditionOption
                     variables={ props.variables }
                     selectedVariable={ props.selectedVariable }
                     onVariableChanged={ newVariable => props.onVariableChanged(newVariable) }

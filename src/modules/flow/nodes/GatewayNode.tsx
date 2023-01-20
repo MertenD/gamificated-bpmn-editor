@@ -4,7 +4,7 @@ import useStore, {handleStyle, selectedColor} from "../../../store";
 import {PointsType} from "../../../model/PointsType";
 import {NodeTypes} from "../../../model/NodeTypes";
 import {Comparisons} from "../../../model/Comparisons";
-import ConditionOptions from "../../form/ConditionOptions";
+import ConditionOption from "../../form/ConditionOption";
 
 export type GatewayNodeData = {
     backgroundColor?: string
@@ -66,7 +66,7 @@ export default function GatewayNode({ id, selected, data }: NodeProps<GatewayNod
 
     return (
         <div style={{ backgroundColor: "transparent", position: "relative" }}>
-            <ConditionOptions
+            <ConditionOption
                 variables={ availableVariableNames }
                 selectedVariable={ selectedVariable }
                 onVariableChanged={ newVariable => setSelectedVariable(newVariable) }
