@@ -25,8 +25,8 @@ export type ChallengeNodeData = {
 
 export default memo(function ChallengeNode({ id, selected, data }: NodeProps<ChallengeNodeData>) {
 
-    const minWidth = 50, minHeight = 50
-    const defaultWidth = 400, defaultHeight = 400
+    const minWidth = 360, minHeight = 200
+    const defaultWidth = 600, defaultHeight = 400
 
     const getChildren = useStore((state) => state.getChildren)
     const updateNodeParent = useStore((state) => state.updateNodeParent)
@@ -58,7 +58,6 @@ export default memo(function ChallengeNode({ id, selected, data }: NodeProps<Cha
         setIsResizing(true)
         const childrenNodes = getChildren(id)
         childrenNodes.map((node) => {
-            console.log("Make children parentless", node)
             updateNodeParent(node, undefined, getNodeById(id) || undefined)
         })
     }
