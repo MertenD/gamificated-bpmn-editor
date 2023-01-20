@@ -18,6 +18,7 @@ export default function GatewayNode({ id, selected, data }: NodeProps<GatewayNod
     const nodes = useStore((state) => state.nodes)
     const edges = useStore((state) => state.edges)
     const getPreviousNodes = useStore((state) => state.getPreviousNodes)
+    const getAvailableVariableNames = useStore((state) => state.getAvailableVariableNames)
     const updateNodeData = useStore((state) => state.updateNodeData);
     const [availableVariableNames, setAvailableVariableNames] = useState<string[]>([])
     const [selectedVariable, setSelectedVariable] = useState(data.variableName || PointsType.EXPERIENCE.valueOf());
@@ -25,35 +26,8 @@ export default function GatewayNode({ id, selected, data }: NodeProps<GatewayNod
     const [valueToCompare, setValueToCompare] = useState(data.valueToCompare || "");
 
     useEffect(() => {
-        // Get all available variable names from all previous nodes that are no decision nodes
-        // also add the points type names
-        setAvailableVariableNames(Array.from(new Set(
-            getPreviousNodes(id)
-                .filter((node) => node.type !== NodeTypes.GATEWAY_NODE)
-                .map((node) => node.data.variableName)
-                .filter(name => name !== undefined && name !== "")
-                .concat(Object.values(PointsType).map(type => "PT:" + type))
-        )))
-
+        setAvailableVariableNames(getAvailableVariableNames(id))
     }, [id, nodes, edges, getPreviousNodes])
-
-    /*
-    variablesSelectStyle={{
-                    position: 'fixed',
-                    right: -140,
-                    top: 5
-                }}
-                comparisonSelectStyle={{
-                    position: 'fixed',
-                    right: -191,
-                    top: 5
-                }}
-                valueToCompareInputStyle={{
-                    position: 'fixed',
-                    right: -320,
-                    top: 5
-                }}
-     */
 
     useEffect(() => {
         updateNodeData<GatewayNodeData>(id, {

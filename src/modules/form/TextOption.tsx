@@ -1,13 +1,13 @@
 import React from "react"
 
-export interface DropdownOptionProps {
-    title: string
-    values: string[]
-    value: string
+export interface TextOptionProps {
+    title: string,
+    placeholder: string,
+    value: string,
     onValueChanged: (newValue: string) => void
 }
 
-export default function DropdownOption(props: DropdownOptionProps) {
+export default function TextOption(props: TextOptionProps) {
 
     return (
         <span style={{
@@ -18,19 +18,15 @@ export default function DropdownOption(props: DropdownOptionProps) {
             marginBottom: 10
         }}>
             { props.title + ":" }
-            <select
-                defaultValue={props.value}
+            <input
+                type="text"
+                placeholder={ props.placeholder }
+                defaultValue={ props.value }
                 className="nodrag"
                 onChange={(event) => {
                     props.onValueChanged(event.target.value)
                 }}
-            >
-                    {
-                        props.values.map(type => {
-                            return <option key={type.valueOf()} value={type}>{ type.valueOf() }</option>
-                        })
-                    }
-            </select>
+            />
         </span>
     )
 }

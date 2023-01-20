@@ -32,7 +32,7 @@ export type RFState = {
     getNodeById: (nodeId: string) => Node | null;
     getChildren: (nodeId: string) => Node[];
     updateNodeParent: (nodeId: Node, newParent: Node | undefined, oldParent: Node | undefined) => void;
-    getAvailableVariableNames: (ownNodeId: string, ownVariableName: string) => string[];
+    getAvailableVariableNames: (ownNodeId: string, ownVariableName?: string) => string[];
 }
 
 export const selectedColor = "blue"
@@ -172,7 +172,7 @@ export const useStore = create<RFState>((set, get) => ({
             })
         })
     },
-    getAvailableVariableNames: (ownNodeId: string, ownVariableName: string): string[] => {
+    getAvailableVariableNames: (ownNodeId: string, ownVariableName: string | undefined = undefined): string[] => {
         // Get all available variable names from all previous nodes that are no decision nodes
         // also add the points type names
         return Array.from(new Set(

@@ -4,6 +4,7 @@ import OptionalConditionOption from "../form/OptionalConditionOption";
 import {Comparisons} from "../../model/Comparisons";
 import useStore from "../../store";
 import DropdownOption from "../form/DropdownOption";
+import NumberOption from "../form/NumberOption";
 
 export type PointsGamificationOptionsData = {
     pointType?: PointsType,
@@ -57,24 +58,12 @@ export default function PointsGamificationOptions(props: PointsGamificationOptio
                 value={ pointType }
                 onValueChanged={ newValue => setPointType(newValue as PointsType) }
             />
-            <span style={{
-                width: "100%",
-                display: "flex",
-                flexDirection: "row",
-                justifyContent: "space-between",
-                marginBottom: 10
-            }}>
-                { "Points for success: " }
-                <input
-                    type="number"
-                    placeholder="Points"
-                    defaultValue={pointsForSuccess}
-                    className="nodrag"
-                    onChange={(event) => {
-                        setPointsForSuccess(Number(event.target.value))
-                    }}
-                />
-            </span>
+            <NumberOption
+                title={ "Points for success" }
+                placeholder={ "Points" }
+                value={ pointsForSuccess }
+                onValueChanged={ newValue => setPointsForSuccess(newValue) }
+            />
             <OptionalConditionOption
                 hasCondition={hasCondition}
                 setHasCondition={ newValue => setHasCondition(newValue) }
