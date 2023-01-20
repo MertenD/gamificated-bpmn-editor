@@ -2,7 +2,6 @@ import React, {useEffect, useState} from 'react';
 import {Handle, NodeProps, Position} from 'reactflow';
 import useStore, {handleStyle, selectedColor} from "../../../store";
 import {PointsType} from "../../../model/PointsType";
-import {NodeTypes} from "../../../model/NodeTypes";
 import {Comparisons} from "../../../model/Comparisons";
 import ConditionOption from "../../form/ConditionOption";
 
@@ -17,7 +16,6 @@ export default function GatewayNode({ id, selected, data }: NodeProps<GatewayNod
 
     const nodes = useStore((state) => state.nodes)
     const edges = useStore((state) => state.edges)
-    const getPreviousNodes = useStore((state) => state.getPreviousNodes)
     const getAvailableVariableNames = useStore((state) => state.getAvailableVariableNames)
     const updateNodeData = useStore((state) => state.updateNodeData);
     const [availableVariableNames, setAvailableVariableNames] = useState<string[]>([])
@@ -27,7 +25,7 @@ export default function GatewayNode({ id, selected, data }: NodeProps<GatewayNod
 
     useEffect(() => {
         setAvailableVariableNames(getAvailableVariableNames(id))
-    }, [id, nodes, edges, getPreviousNodes])
+    }, [id, nodes, edges])
 
     useEffect(() => {
         updateNodeData<GatewayNodeData>(id, {

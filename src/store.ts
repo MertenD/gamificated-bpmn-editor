@@ -183,7 +183,7 @@ export const useStore = create<RFState>((set, get) => ({
                 .map((node) => node.data.variableName)
                 .concat(ownVariableName)
                 .filter(name => name !== undefined && name !== "")
-                .concat(Object.values(PointsType).map(type => "PT:" + type))
+                .concat(Object.values(PointsType))
         ))
     }
 }));
