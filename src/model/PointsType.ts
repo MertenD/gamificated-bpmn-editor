@@ -1,3 +1,4 @@
 export enum PointsType {
-    EXPERIENCE = "Experience"
+    EXPERIENCE = "Experience",
+    COINS = "Coins"
 }

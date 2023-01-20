@@ -106,7 +106,7 @@ export default memo(function ChallengeNode({ id, selected, data }: NodeProps<Cha
                                 case ChallengeType.TIME_CHALLENGE:
                                     return (
                                         <NumberOption
-                                            title={ "Time to complete" }
+                                            title={ "Time in seconds" }
                                             placeholder={ "Seconds" }
                                             value={ secondsToComplete }
                                             onValueChanged={ newValue => setSecondsToComplete(newValue) }
