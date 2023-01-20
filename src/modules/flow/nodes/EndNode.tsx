@@ -1,15 +1,19 @@
 import React from 'react';
 import {Handle, NodeProps, Position} from 'reactflow';
-import {handleStyle} from "../../../store";
+import {handleStyle, selectedColor} from "../../../store";
 
 export type EndNodeData = {
     backgroundColor?: string
 }
 
-export default function EndNode({ id, data}: NodeProps<EndNodeData>) {
+export default function EndNode({ id, selected, data}: NodeProps<EndNodeData>) {
 
     return (
-        <div style={{ ...endNodeShapeStyle, backgroundColor: data.backgroundColor}} >
+        <div style={{
+            ...endNodeShapeStyle,
+            backgroundColor: data.backgroundColor,
+            borderColor: selected ? selectedColor : undefined
+        }} >
             <Handle style={handleStyle} type="target" position={Position.Left} />
         </div>
     )

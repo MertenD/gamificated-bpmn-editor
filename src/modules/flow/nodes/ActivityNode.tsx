@@ -1,6 +1,6 @@
 import React, {useEffect, useState} from 'react';
 import {Handle, NodeProps, Position} from 'reactflow';
-import useStore, {handleStyle} from "../../../store";
+import useStore, {handleStyle, selectedColor} from "../../../store";
 import {GamificationType} from "../../../model/GamificationType";
 import PointsGamificationOptions, {PointsGamificationOptionsData} from "../../gamification/PointsGamificationOptions";
 import {ActivityType} from "../../../model/ActivityType";
@@ -45,7 +45,7 @@ export default function ActivityNode({ id, selected, data }: NodeProps<ActivityN
         <div style={{
             ...activityShapeStyle,
             backgroundColor: data.backgroundColor || activityShapeStyle.backgroundColor,
-            borderColor: selected ? "blue" : undefined
+            borderColor: selected ? selectedColor : undefined
         }}>
             <Handle style={handleStyle} type="source" position={Position.Right}/>
             <Handle style={handleStyle} type="target" position={Position.Left}/>

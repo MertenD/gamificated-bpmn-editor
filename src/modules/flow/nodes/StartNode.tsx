@@ -1,15 +1,19 @@
 import React from 'react';
 import {Handle, NodeProps, Position} from 'reactflow';
-import {handleStyle} from "../../../store";
+import {handleStyle, selectedColor} from "../../../store";
 
 export type StartNodeData = {
     backgroundColor?: string
 }
 
-export default function StartNode({ id, data}: NodeProps<StartNodeData>) {
+export default function StartNode({ id, selected, data}: NodeProps<StartNodeData>) {
 
     return (
-        <div style={{ ...startNodeShapeStyle, backgroundColor: data.backgroundColor}}>
+        <div style={{
+            ...startNodeShapeStyle,
+            backgroundColor: data.backgroundColor,
+            borderColor: selected ? selectedColor : undefined
+        }}>
             <Handle style={handleStyle} type="source" position={Position.Right} />
         </div>
     )

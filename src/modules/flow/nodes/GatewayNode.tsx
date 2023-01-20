@@ -1,6 +1,6 @@
 import React, {useEffect, useState} from 'react';
 import {Handle, NodeProps, Position} from 'reactflow';
-import useStore, {handleStyle} from "../../../store";
+import useStore, {handleStyle, selectedColor} from "../../../store";
 import {PointsType} from "../../../model/PointsType";
 import {NodeTypes} from "../../../model/NodeTypes";
 
@@ -20,7 +20,7 @@ export type GatewayNodeData = {
     valueToCompare?: string
 }
 
-export default function GatewayNode({ id, data }: NodeProps<GatewayNodeData>) {
+export default function GatewayNode({ id, selected, data }: NodeProps<GatewayNodeData>) {
 
     const nodes = useStore((state) => state.nodes)
     const edges = useStore((state) => state.edges)
@@ -132,7 +132,11 @@ export default function GatewayNode({ id, data }: NodeProps<GatewayNodeData>) {
             >
                 { "False" }
             </div>
-            <div style={{ ...GatewayShapeStyle, backgroundColor: data.backgroundColor }} >
+            <div style={{
+                ...GatewayShapeStyle,
+                backgroundColor: data.backgroundColor,
+                borderColor: selected ? selectedColor : undefined
+            }} >
                 <hr style={{ backgroundColor: "black", border: "1px solid black", width: "70%", marginTop: 14 }}/>
                 <hr style={{ backgroundColor: "black", border: "1px solid black", width: "70%", marginTop: -10, transform: "rotateY(0deg) rotate(90deg)" }}/>
             </div>
