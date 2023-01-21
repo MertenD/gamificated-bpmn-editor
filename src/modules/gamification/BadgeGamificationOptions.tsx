@@ -4,15 +4,7 @@ import {PointsType} from "../../model/PointsType";
 import useStore from "../../store";
 import OptionalConditionOption from "../form/OptionalConditionOption";
 import DropdownOption from "../form/DropdownOption";
-
-enum Comparisons {
-    EQUALS = "=",
-    NOT_EQUALS = "!=",
-    GREATER = ">",
-    GREATER_OR_EQUALS = ">=",
-    LOWER = "<",
-    LOWER_OR_EQUALS = "<="
-}
+import {Comparisons} from "../../model/Comparisons";
 
 export type BadgeGamificationOptionsData = {
     badgeType?: BadgeType,
