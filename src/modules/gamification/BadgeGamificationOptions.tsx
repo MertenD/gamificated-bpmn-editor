@@ -1,6 +1,5 @@
 import React, {useEffect, useState} from "react"
 import {BadgeType} from "../../model/BadgeType";
-import {PointsType} from "../../model/PointsType";
 import useStore from "../../store";
 import OptionalConditionOption from "../form/OptionalConditionOption";
 import DropdownOption from "../form/DropdownOption";
@@ -30,9 +29,9 @@ export default function BadgeGamificationOptions(props: BadgeGamificationOptions
     const [availableVariableNames, setAvailableVariableNames] = useState<string[]>([])
     const [badgeType, setBadgeType] = useState(props.gamificationOptions.badgeType || BadgeType.EXPLORER_BATCH)
     const [hasCondition, setHasCondition] = useState<boolean>(props.gamificationOptions.hasCondition || false)
-    const [selectedVariable, setSelectedVariable] = useState(props.gamificationOptions.variableName || PointsType.EXPERIENCE.valueOf());
+    const [selectedVariable, setSelectedVariable] = useState(props.gamificationOptions.variableName || "{" + getAvailableVariableNames(props.parentNodeId,  props.parentVariableName)[0] + "}");
     const [comparison, setComparison] = useState(props.gamificationOptions.comparison || Comparisons.EQUALS);
-    const [valueToCompare, setValueToCompare] = useState(props.gamificationOptions.valueToCompare || "");
+    const [valueToCompare, setValueToCompare] = useState(props.gamificationOptions.valueToCompare || "{" + getAvailableVariableNames(props.parentNodeId,  props.parentVariableName)[0] + "}");
 
     useEffect(() => {
         setAvailableVariableNames(getAvailableVariableNames(props.parentNodeId, props.parentVariableName))

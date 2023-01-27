@@ -1,5 +1,6 @@
 import React from "react"
 import {Comparisons} from "../../model/Comparisons";
+import SelectWithCustomInputOption from "./SelectWithCustomInputOption";
 
 export interface ConditionOptionsProps {
     variables: string[]
@@ -14,6 +15,9 @@ export interface ConditionOptionsProps {
 
 export default function ConditionOption(props: ConditionOptionsProps) {
 
+    console.log("Value1:", props.selectedVariable)
+    console.log("Value2:", props.valueToCompare)
+
     return (
         <span style={{
             width: "100%",
@@ -22,24 +26,11 @@ export default function ConditionOption(props: ConditionOptionsProps) {
             justifyContent: "space-between",
             ...props.conditionOptionsSpanStyle
         }}>
-            <select
-                style={{
-                    width: 120
-                }}
-                value={props.selectedVariable}
-                name="variableName"
-                id="variableName"
-                className="nodrag"
-                onChange={(event) => {
-                    props.onVariableChanged(event.target.value)
-                }}
-            >
-            {
-                props.variables.map(name => {
-                    return <option key={name} value={name}>{ name }</option>
-                })
-            }
-            </select>
+            <SelectWithCustomInputOption
+                values={props.variables}
+                selectedValue={props.selectedVariable}
+                onValueChanged={props.onVariableChanged}
+            />
             <select
                 style={{
                     width: 50
@@ -58,17 +49,10 @@ export default function ConditionOption(props: ConditionOptionsProps) {
                     })
                 }
             </select>
-            <input
-                style={{
-                    width: 120
-                }}
-                type="text"
-                placeholder="Other value"
-                defaultValue={props.valueToCompare}
-                className="nodrag"
-                onChange={(event) =>
-                    props.onValueToCompareChanged(event.target.value)
-                }
+            <SelectWithCustomInputOption
+                values={props.variables}
+                selectedValue={props.valueToCompare}
+                onValueChanged={props.onValueToCompareChanged}
             />
         </span>
     )

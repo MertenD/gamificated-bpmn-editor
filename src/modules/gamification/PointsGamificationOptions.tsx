@@ -32,9 +32,9 @@ export default function PointsGamificationOptions(props: PointsGamificationOptio
     const [pointsForSuccess, setPointsForSuccess] = useState(props.gamificationOptions.pointsForSuccess || 0)
     const [availableVariableNames, setAvailableVariableNames] = useState<string[]>([])
     const [hasCondition, setHasCondition] = useState<boolean>(props.gamificationOptions.hasCondition || false)
-    const [selectedVariable, setSelectedVariable] = useState(props.gamificationOptions.variableName || PointsType.EXPERIENCE.valueOf());
+    const [selectedVariable, setSelectedVariable] = useState(props.gamificationOptions.variableName || "{" + getAvailableVariableNames(props.parentNodeId,  props.parentVariableName)[0] + "}");
     const [comparison, setComparison] = useState(props.gamificationOptions.comparison || Comparisons.EQUALS);
-    const [valueToCompare, setValueToCompare] = useState(props.gamificationOptions.valueToCompare || "");
+    const [valueToCompare, setValueToCompare] = useState(props.gamificationOptions.valueToCompare || "{" + getAvailableVariableNames(props.parentNodeId,  props.parentVariableName)[0] + "}");
 
     useEffect(() => {
         props.onChange({

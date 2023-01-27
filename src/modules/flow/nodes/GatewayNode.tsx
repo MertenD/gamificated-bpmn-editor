@@ -1,7 +1,6 @@
 import React, {useEffect, useState} from 'react';
 import {Handle, NodeProps, Position} from 'reactflow';
 import useStore, {handleStyle, selectedColor} from "../../../store";
-import {PointsType} from "../../../model/PointsType";
 import {Comparisons} from "../../../model/Comparisons";
 import ConditionOption from "../../form/ConditionOption";
 
@@ -19,9 +18,9 @@ export default function GatewayNode({ id, selected, data }: NodeProps<GatewayNod
     const getAvailableVariableNames = useStore((state) => state.getAvailableVariableNames)
     const updateNodeData = useStore((state) => state.updateNodeData);
     const [availableVariableNames, setAvailableVariableNames] = useState<string[]>([])
-    const [selectedVariable, setSelectedVariable] = useState(data.variableName || PointsType.EXPERIENCE.valueOf());
+    const [selectedVariable, setSelectedVariable] = useState(data.variableName || "{" + getAvailableVariableNames(id)[0] + "}");
     const [comparison, setComparison] = useState(data.comparison || Comparisons.EQUALS);
-    const [valueToCompare, setValueToCompare] = useState(data.valueToCompare || "");
+    const [valueToCompare, setValueToCompare] = useState(data.valueToCompare || "{" + getAvailableVariableNames(id)[0] + "}");
 
     useEffect(() => {
         setAvailableVariableNames(getAvailableVariableNames(id))
@@ -49,14 +48,14 @@ export default function GatewayNode({ id, selected, data }: NodeProps<GatewayNod
                 conditionOptionsSpanStyle={{
                     position: 'fixed',
                     right: -60,
-                    top: 5
+                    top: -5
                 }}
             />
             <div
                 style={{
                     width: 70,
                     position: 'fixed',
-                    top: -30,
+                    top: -35,
                     left: 20
                 }}
             >
@@ -66,7 +65,7 @@ export default function GatewayNode({ id, selected, data }: NodeProps<GatewayNod
                 style={{
                     width: 70,
                     position: 'fixed',
-                    bottom: -30,
+                    bottom: -35,
                     left: 25
                 }}
             >
