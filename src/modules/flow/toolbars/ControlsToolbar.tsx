@@ -27,6 +27,7 @@ export default function ControlsToolbar() {
                 <input style={{ width: "100%", marginBottom: 10 }} type="file" onChange={event => onLoad(event, reactFlowInstance)} />
                 <button style={{ width: "100%" }} onClick={_ => onExport(nodes, edges)}>
                     Export for Engine
+                    <a id="downloadExport" style={{ display: "none"}}></a>
                 </button>
             </div>
         </aside>
