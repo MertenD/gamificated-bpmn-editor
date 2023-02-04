@@ -6,8 +6,6 @@ import {NodeTypes} from "../model/NodeTypes";
 import {ActivityNodeData} from "../modules/flow/nodes/ActivityNode";
 import {InfoNodeData} from "../modules/flow/nodes/InfoNode";
 import {GatewayNodeData} from "../modules/flow/nodes/GatewayNode";
-import {setRef} from "@mui/material";
-
 
 export const onSave = (nodes: Node[], edges: Edge[]) => {
     const downloadableContent = "data:text/json;charset=utf-8," + encodeURIComponent(JSON.stringify(serializeToDto(nodes, edges), null, 2));
@@ -47,7 +45,154 @@ export const onLoad = (changeEvent: any, reactFlowInstance: ReactFlowInstance) =
     };
 }
 
-export const onExport = (nodes: Node[], edges: Edge[]) => {
+function createChallengesNodesAndEdges(challengeNodes: Node[], edges: Edge[], getChildren: (nodeId: string) => Node[]): BpmnDto {
+    return challengeNodes.reduce((accumulator: BpmnDto, currentNode: Node) => {
+        const result = createChallengeNodesAndEdges(currentNode, edges, getChildren)
+        return {
+            nodes: [...accumulator.nodes, ...result.nodes],
+            edges: [...accumulator.edges, ...result.edges]
+        } as BpmnDto
+    }, { nodes: [], edges: [] } as BpmnDto)
+}
+
+function createChallengeNodesAndEdges(challengeNode: Node, edges: Edge[], getChildren: (nodeId: string) => Node[]): BpmnDto {
+    // Get all the children of the challenge node
+    let challengeChildren = getChildren(challengeNode.id)
+
+    // Array to store all the incoming edges to the children of the challenge node
+    let challengeEnteringEdges: Edge[] = []
+
+    // Get all the first children of the challenge node (i.e. children that have no incoming edges from other children of the challenge node)
+    const firstChildren = challengeChildren.filter((node) => {
+        // Get all incoming edges to the current child node
+        const incomingEdges = edges.filter((edge) => edge.target === node.id)
+        let isFirst = false
+        // Check if any of the incoming edges to the current child node are from a node outside the challenge node's children
+        incomingEdges.forEach((edge) => {
+            const prevNodeId = edge.source
+            if (!challengeChildren.map((node) => node.id).includes(prevNodeId)) {
+                isFirst = true
+                challengeEnteringEdges.push(edge)
+            }
+        })
+        return isFirst
+    })
+
+    // Array to store all the outgoing edges from the children of the challenge node
+    let challengeLeavingEdges: Edge[] = []
+    // Get all the last children of the challenge node (i.e. children that have no outgoing edges to other children of the challenge node)
+    const lastChildren = challengeChildren.filter((node) => {
+        // Get all outgoing edges from the current child node
+        const outgoingEdges = edges.filter((edge) => edge.source === node.id)
+        let isLast = false
+        // Check if any of the outgoing edges from the current child node are to a node outside of the challenge node's children
+        outgoingEdges.forEach((edge) => {
+            const nextNodeId = edge.target
+            if (!challengeChildren.map((node) => node.id).includes(nextNodeId)) {
+                isLast = true
+                challengeLeavingEdges.push(edge)
+            }
+        })
+        return isLast
+    })
+
+    // Array to store all new nodes
+    let newNodes: Node[] = []
+    // Array to store all new edges
+    let newEdges: Edge[] = []
+
+    // For each first child node of the challenge node
+    firstChildren.map((node) => {
+        // Get all incoming edges to the current first child node
+        const incomingEdges = challengeEnteringEdges.filter((edge) => edge.target === node.id)
+        // Generate a unique ID for a new outgoing edge
+        const outgoingEdgeId = uuidv4()
+        // Generate a unique ID for a new "Challenge Start" info node
+        const challengeStartId = uuidv4()
+        // Create a new "Challenge Start" info node
+        const newChallengeStartNode = {
+            id: challengeStartId,
+            type: NodeTypes.INFO_NODE,
+            position: {
+                x: node.position.x + challengeNode.position.x - 70,
+                y: node.position.y + challengeNode.position.y + (node.height || 0) / 2
+            },
+            width: 50,
+            height: 50,
+            data: { infoText: "Challenge Start" }
+        } as Node
+        // Add the new "Challenge Start" node to
+        newNodes.push(newChallengeStartNode)
+        const newOutgoingEdge = {
+            id: outgoingEdgeId,
+            source: challengeStartId,
+            target: node.id,
+        } as Edge
+        newEdges.push(newOutgoingEdge)
+        incomingEdges.forEach((edge) => {
+            const newIncomingEdge = {
+                id: edge.id,
+                source: edge.source,
+                sourceHandle: edge.sourceHandle,
+                target: challengeStartId
+            } as Edge
+            newEdges.push(newIncomingEdge)
+        })
+    })
+
+    lastChildren.map((node) => {
+        const outgoingEdge = challengeLeavingEdges.find((edge) => edge.source === node.id)
+        const incomingEdgeId = uuidv4()
+        const challengeEndId = uuidv4()
+        const newChallengeEndNode = {
+            id: challengeEndId,
+            type: NodeTypes.INFO_NODE,
+            position: {
+                x: node.position.x + challengeNode.position.x + (node.width || 0) + 20,
+                y: node.position.y + challengeNode.position.y + (node.height || 0) / 2
+            },
+            width: 50,
+            height: 50,
+            parent: challengeNode.id,
+            data: { infoText: "Challenge End" }
+        } as Node
+        newNodes.push(newChallengeEndNode)
+        const newIncomingEdge = {
+            id: incomingEdgeId,
+            source: node.id,
+            sourceHandle: outgoingEdge?.sourceHandle,
+            target: challengeEndId,
+        } as Edge
+        newEdges.push(newIncomingEdge)
+        const newOutgoingEdge = {
+            id: outgoingEdge?.id,
+            source: challengeEndId,
+            target: outgoingEdge?.target,
+            targetHandle: outgoingEdge?.targetHandle
+        } as Edge
+        newEdges.push(newOutgoingEdge)
+    })
+
+    return {
+        nodes: newNodes,
+        edges: newEdges
+    } as BpmnDto
+}
+
+export const onExport = (
+    nodes: Node[],
+    edges: Edge[],
+    getChildren: (nodeId: string) => Node[],
+    getNodeById: (nodeId: string) => Node | null
+) => {
+
+    const challengeNodes = nodes.filter((node) => node.type as NodeTypes === NodeTypes.CHALLENGE_NODE)
+    const edgesOutsideOrInsideChallenges = edges.filter((edge) => getNodeById(edge.source)?.parentNode === getNodeById(edge.target)?.parentNode)
+
+    const newNodesAndEdges = createChallengesNodesAndEdges(challengeNodes, edges, getChildren)
+
+    const newNodes = [...nodes, ...newNodesAndEdges.nodes]
+    const newEdges = [...edgesOutsideOrInsideChallenges, ...newNodesAndEdges.edges]
 
     const bpmn = {
         "bpmn:definitions": {
@@ -61,28 +206,27 @@ export const onExport = (nodes: Node[], edges: Edge[]) => {
                         id: "Process_1b8z10m",
                         isExecutable: "false",
                         children: [
-                            ...nodes.map((node: Node) => {
+                            ...newNodes.map((node: Node) => {
                                 switch (node.type as NodeTypes) {
                                     case NodeTypes.START_NODE:
-                                        return createStartNode(node, edges)
+                                        return createStartNode(node, newEdges)
                                     case NodeTypes.END_NODE:
-                                        return createEndNode(node, edges)
+                                        return createEndNode(node, newEdges)
                                     case NodeTypes.ACTIVITY_NODE:
-                                        return createActivityNode(node, edges)
+                                        return createActivityNode(node, newEdges)
                                     case NodeTypes.INFO_NODE:
-                                        return createInfoNode(node, edges)
+                                        return createInfoNode(node, newEdges)
                                     case NodeTypes.GATEWAY_NODE:
-                                        return createGatewayNode(node, edges)
-                                    case NodeTypes.CHALLENGE_NODE:
-                                        return createChallengeNode(node, edges)
+                                        return createGatewayNode(node, newEdges)
                                 }
                             }),
-                            ...edges.map((edge: Edge) => {
+                            ...newEdges.map((edge: Edge) => {
                                 return {
                                     "bpmn:sequenceFlow": {
                                         id: "IdFlow_" + edge.id.replaceAll("-", ""),
                                         sourceRef: "Id_" + edge.source.replaceAll("-", ""),
                                         targetRef: "Id_" + edge.target.replaceAll("-", ""),
+                                        name: nodes.find((node) => node.id == edge.source && (node.type as NodeTypes) === NodeTypes.GATEWAY_NODE) !== undefined ? edge.sourceHandle : "",
                                         children: []
                                     }
                                 }
@@ -97,15 +241,15 @@ export const onExport = (nodes: Node[], edges: Edge[]) => {
                                     id: "BPMNPlane_1",
                                     bpmnElement: "Process_1b8z10m",
                                     children: [
-                                        ...nodes.map((node: Node) => {
+                                        ...newNodes.map((node: Node) => {
                                             return {
                                                 "bpmndi:BPMNShape": {
                                                     bpmnElement: "Id_" + node.id.replaceAll("-", ""),
                                                     children: [
                                                         {
                                                             "dc:Bounds": {
-                                                                x: node.position.x,
-                                                                y: node.position.y,
+                                                                x: node.parentNode !== undefined ? node.position.x + (getNodeById(node.parentNode)?.position.x || 0) : node.position.x,
+                                                                y: node.parentNode !== undefined ? node.position.y + (getNodeById(node.parentNode)?.position.y || 0) : node.position.y,
                                                                 width: node.width,
                                                                 height: node.height
                                                             }
@@ -114,7 +258,7 @@ export const onExport = (nodes: Node[], edges: Edge[]) => {
                                                 }
                                             }
                                         }),
-                                        ...edges.map((edge: Edge) => {
+                                        ...newEdges.map((edge: Edge) => {
                                             return {
                                                 "bpmndi:BPMNEdge": {
                                                     bpmnElement: "IdFlow_" + edge.id.replaceAll("-", ""),
@@ -201,11 +345,6 @@ export const onExport = (nodes: Node[], edges: Edge[]) => {
                 ]
             }
         }
-    }
-
-    function createChallengeNode(node: Node, edges: Edge[]): any {
-        // TODO
-        console.log("Challenge")
     }
 
     function getOutgoingEdgeChildren(edges: Edge[], currentNode: Node): any {

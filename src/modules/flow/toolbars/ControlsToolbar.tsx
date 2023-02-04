@@ -6,6 +6,8 @@ import {onExport, onLoad, onSave} from "../../../util/ImportExportUtils";
 export default function ControlsToolbar() {
     const nodes = useStore((state) => state.nodes);
     const edges = useStore((state) => state.edges);
+    const getChildren = useStore((state) => state.getChildren)
+    const getNodeById = useStore((state) => state.getNodeById)
     const reactFlowInstance = useReactFlow();
 
     return (
@@ -25,7 +27,7 @@ export default function ControlsToolbar() {
                     <a id="downloadSave" style={{ display: "none"}}></a>
                 </button>
                 <input style={{ width: "100%", marginBottom: 10 }} type="file" onChange={event => onLoad(event, reactFlowInstance)} />
-                <button style={{ width: "100%" }} onClick={_ => onExport(nodes, edges)}>
+                <button style={{ width: "100%" }} onClick={_ => onExport(nodes, edges, getChildren, getNodeById)}>
                     Export for Engine
                     <a id="downloadExport" style={{ display: "none"}}></a>
                 </button>
