@@ -6,6 +6,7 @@ import {NodeTypes} from "../model/NodeTypes";
 import {ActivityNodeData} from "../modules/flow/nodes/ActivityNode";
 import {InfoNodeData} from "../modules/flow/nodes/InfoNode";
 import {GatewayNodeData} from "../modules/flow/nodes/GatewayNode";
+import {ChallengeNodeData} from "../modules/flow/nodes/ChallengeNode";
 
 export const onSave = (nodes: Node[], edges: Edge[]) => {
     const downloadableContent = "data:text/json;charset=utf-8," + encodeURIComponent(JSON.stringify(serializeToDto(nodes, edges), null, 2));
@@ -66,7 +67,7 @@ export const onExport = (
                         id: "Process_1b8z10m",
                         isExecutable: "false",
                         children: [
-                            ...transformedBpmn.nodes.map((node: Node) => {
+                            ...transformedBpmn.nodes.flatMap((node: Node) => {
                                 switch (node.type as NodeTypes) {
                                     case NodeTypes.START_NODE:
                                         return createStartNode(node, transformedBpmn.edges)
@@ -78,6 +79,8 @@ export const onExport = (
                                         return createInfoNode(node, transformedBpmn.edges)
                                     case NodeTypes.GATEWAY_NODE:
                                         return createGatewayNode(node, transformedBpmn.edges)
+                                    case NodeTypes.CHALLENGE_NODE:
+                                        return createChallengeNode(node, transformedBpmn.edges)
                                 }
                             }),
                             ...transformedBpmn.edges.map((edge: Edge) => {
@@ -101,8 +104,9 @@ export const onExport = (
                                     id: "BPMNPlane_1",
                                     bpmnElement: "Process_1b8z10m",
                                     children: [
-                                        ...transformedBpmn.nodes.map((node: Node) => {
-                                            return {
+                                        ...transformedBpmn.nodes.flatMap((node: Node) => {
+                                            let shapes = []
+                                            shapes.push({
                                                 "bpmndi:BPMNShape": {
                                                     bpmnElement: "Id_" + node.id.replaceAll("-", ""),
                                                     children: [
@@ -116,7 +120,63 @@ export const onExport = (
                                                         }
                                                     ]
                                                 }
+                                            })
+                                            switch (node.type as NodeTypes) {
+                                                case NodeTypes.ACTIVITY_NODE:
+                                                case NodeTypes.CHALLENGE_NODE:
+                                                    shapes.push({
+                                                        "bpmndi:BPMNShape": {
+                                                            id: "DataObjectReference_" + node.id.replaceAll("-", "") + "_di",
+                                                            bpmnElement: "DataObjectReference_" + node.id.replaceAll("-", ""),
+                                                            children: [
+                                                                {
+                                                                    "dc:Bounds": {
+                                                                        x: node.parentNode !== undefined ? node.position.x + 10 + (getNodeById(node.parentNode)?.position.x || 0) : node.position.x + 10,
+                                                                        y: node.parentNode !== undefined ? node.position.y - 150 + (getNodeById(node.parentNode)?.position.y || 0) : node.position.y - 150,
+                                                                        width: 40,
+                                                                        height: 60
+                                                                    }
+                                                                },
+                                                                {
+                                                                    "bpmndi:BPMNLabel": {
+                                                                        children: [
+                                                                            {
+                                                                                "dc:Bounds": {
+                                                                                    x: node.parentNode !== undefined ? node.position.x + 50 + (getNodeById(node.parentNode)?.position.x || 0) : node.position.x + 50,
+                                                                                    y: node.parentNode !== undefined ? node.position.y - 150 + (getNodeById(node.parentNode)?.position.y || 0) : node.position.y - 150,
+                                                                                    width: 150,
+                                                                                    height: 30
+                                                                                }
+                                                                            }
+                                                                        ]
+                                                                    }
+                                                                }
+                                                            ]
+                                                        }
+                                                    })
+                                                    shapes.push({
+                                                        "bpmndi:BPMNEdge": {
+                                                            id: "DataInputAssociation_" + node.id.replaceAll("-", "") + "_di",
+                                                            bpmnElement: "DataInputAssociation_" + node.id.replaceAll("-", ""),
+                                                            children: [
+                                                                {
+                                                                    "di:waypoint": {
+                                                                        x: node.parentNode !== undefined ? node.position.x + 30 + (getNodeById(node.parentNode)?.position.x || 0) : node.position.x + 30,
+                                                                        y: node.parentNode !== undefined ? node.position.y - 90 + (getNodeById(node.parentNode)?.position.y || 0) : node.position.y - 90
+                                                                    }
+                                                                },
+                                                                {
+                                                                    "di:waypoint": {
+                                                                        x: node.parentNode !== undefined ? node.position.x + 30 + (getNodeById(node.parentNode)?.position.x || 0) : node.position.x + 30,
+                                                                        y: node.parentNode !== undefined ? node.position.y + (getNodeById(node.parentNode)?.position.y || 0) : node.position.y
+                                                                    }
+                                                                },
+                                                            ]
+                                                        }
+                                                    })
+                                                    break
                                             }
+                                            return shapes
                                         }),
                                         ...transformedBpmn.edges.map((edge: Edge) => {
                                             return {
@@ -167,16 +227,53 @@ export const onExport = (
 
     function createActivityNode(node: Node, edges: Edge[]): any {
         const activityNodeData = node.data as ActivityNodeData
-        return {
-            "bpmn:task": {
-                id: "Id_" + node.id.replaceAll("-", ""),
-                name: activityNodeData.task,
-                children: [
-                    ...getIncomingEdgeChildren(edges, node),
-                    ...getOutgoingEdgeChildren(edges, node),
-                ]
+        const propertyId = "Property_" + node.id.replaceAll("-", "")
+        const inputDataAssociationId = "DataInputAssociation_" + node.id.replaceAll("-", "")
+        const dataObjectReferenceId = "DataObjectReference_" + node.id.replaceAll("-", "")
+        const dataObjectId = "DataObject_" + node.id.replaceAll("-", "")
+
+        return [
+            {
+                "bpmn:task": {
+                    id: "Id_" + node.id.replaceAll("-", ""),
+                    name: activityNodeData.task,
+                    children: [
+                        {
+                            "bpmn:property": {
+                                id: propertyId,
+                            }
+                        },
+                        {
+                            "bpmn:dataInputAssociation": {
+                                id: inputDataAssociationId,
+                                sourceRef: dataObjectReferenceId,
+                                children: [
+                                    {
+                                        "bpmn:targetRef": {
+                                            children: propertyId
+                                        }
+                                    }
+                                ]
+                            }
+                        },
+                        ...getIncomingEdgeChildren(edges, node),
+                        ...getOutgoingEdgeChildren(edges, node),
+                    ]
+                }
+            },
+            {
+                "bpmn:dataObjectReference": {
+                    id: dataObjectReferenceId,
+                    name: JSON.stringify(activityNodeData).replaceAll("\"", "&quot;"),
+                    dataObjectRef: dataObjectId
+                }
+            },
+            {
+                "bpmn:dataObject": {
+                    id: dataObjectId
+                }
             }
-        }
+        ]
     }
 
     function createInfoNode(node: Node, edges: Edge[]): any {
@@ -226,6 +323,57 @@ export const onExport = (
             }
         })
     }
+
+    function createChallengeNode(node: Node, edges: Edge[]): any {
+        const challengeNodeData = node.data as ChallengeNodeData
+        const propertyId = "Property_" + node.id.replaceAll("-", "")
+        const inputDataAssociationId = "DataInputAssociation_" + node.id.replaceAll("-", "")
+        const dataObjectReferenceId = "DataObjectReference_" + node.id.replaceAll("-", "")
+        const dataObjectId = "DataObject_" + node.id.replaceAll("-", "")
+
+        return [
+            {
+                "bpmn:task": {
+                    id: "Id_" + node.id.replaceAll("-", ""),
+                    name: challengeNodeData.challengeType,
+                    children: [
+                        {
+                            "bpmn:property": {
+                                id: propertyId,
+                            }
+                        },
+                        {
+                            "bpmn:dataInputAssociation": {
+                                id: inputDataAssociationId,
+                                sourceRef: dataObjectReferenceId,
+                                children: [
+                                    {
+                                        "bpmn:targetRef": {
+                                            children: propertyId
+                                        }
+                                    }
+                                ]
+                            }
+                        },
+                        ...getIncomingEdgeChildren(edges, node),
+                        ...getOutgoingEdgeChildren(edges, node),
+                    ]
+                }
+            },
+            {
+                "bpmn:dataObjectReference": {
+                    id: dataObjectReferenceId,
+                    name: JSON.stringify(challengeNodeData).replaceAll("\"", "&quot;"),
+                    dataObjectRef: dataObjectId
+                }
+            },
+            {
+                "bpmn:dataObject": {
+                    id: dataObjectId
+                }
+            }
+        ]
+    }
 }
 
 function transformChallengesToRealBpmn(
@@ -248,7 +396,7 @@ function transformChallengesToRealBpmn(
 
     const edgesOutsideOrInsideChallenges = edges.filter((edge) => getNodeById(edge.source)?.parentNode === getNodeById(edge.target)?.parentNode)
 
-    const transformedNodes = [...nodes, ...transformedChallengeStartAndStop.nodes]
+    const transformedNodes = [...nodes.filter((node) => node.type as NodeTypes !== NodeTypes.CHALLENGE_NODE), ...transformedChallengeStartAndStop.nodes]
     const transformedEdges = [...edgesOutsideOrInsideChallenges, ...transformedChallengeStartAndStop.edges]
 
     return {
@@ -314,14 +462,17 @@ function substituteIngoingEdges(firstChildren: Node[], challengeNode: Node, edge
         // Create a new "Challenge Start" info node
         const newChallengeStartNode = {
             id: challengeStartId,
-            type: NodeTypes.INFO_NODE,
+            type: NodeTypes.CHALLENGE_NODE,
             position: {
-                x: node.position.x + challengeNode.position.x - 70,
+                x: node.position.x + challengeNode.position.x - 100,
                 y: node.position.y + challengeNode.position.y + (node.height || 0) / 2
             },
             width: 50,
             height: 50,
-            data: { infoText: "Challenge Start" }
+            data: {
+                isStart: true,
+                ...challengeNode.data
+            }
         } as Node
         // Add the new "Challenge Start" node to
         newNodes.push(newChallengeStartNode)
@@ -361,15 +512,18 @@ function substituteOutgoingEdges(lastChildren: Node[], challengeNode: Node, edge
         const challengeEndId = uuidv4()
         const newChallengeEndNode = {
             id: challengeEndId,
-            type: NodeTypes.INFO_NODE,
+            type: NodeTypes.CHALLENGE_NODE,
             position: {
-                x: node.position.x + challengeNode.position.x + (node.width || 0) + 20,
+                x: node.position.x + challengeNode.position.x + (node.width || 0) + 50,
                 y: node.position.y + challengeNode.position.y + (node.height || 0) / 2
             },
             width: 50,
             height: 50,
             parent: challengeNode.id,
-            data: { infoText: "Challenge End" }
+            data: {
+                isStart: false,
+                ...challengeNode.data
+            }
         } as Node
         newNodes.push(newChallengeEndNode)
         const newIncomingEdge = {
