@@ -56,14 +56,19 @@ export const onExport = (
     const transformedBpmn = transformChallengesToRealBpmn(nodes, edges, getChildren, getNodeById)
 
     const bpmn = {
-        "bpmn:definitions": {
-            id: "Definitions_0hjm41d",
-            targetNamespace: "http://bpmn.io/schema/bpmn",
-            exporter: "bpmn-js (https://demo.bpmn.io)",
-            exporterVersion: "11.1.0",
+        "definitions": {
+            id: "Definitions",
+            targetNamespace: "http://www.omg.org/spec/BPMN/20100524/MODEL",
+            exporter: "gbpmneditor (gbpmneditor.mertendieckmann.com)",
+            xmlns: "http://www.omg.org/spec/BPMN/20100524/MODEL",
+            "xmlns:xs": "http://www.w3.org/2001/XMLSchema-instance",
+            "xs:schemaLocation": "http://www.omg.org/spec/BPMN/20100524/MODEL BPMN20.xsd",
+            "xmlns:bpmndi": "http://www.omg.org/spec/BPMN/20100524/DI",
+            "xmlns:dc": "http://www.omg.org/spec/DD/20100524/DC",
+            "xmlns:di": "http://www.omg.org/spec/DD/20100524/DI",
             children: [
                 {
-                    "bpmn:process": {
+                    "process": {
                         id: "Process_1b8z10m",
                         isExecutable: "false",
                         children: [
@@ -85,7 +90,7 @@ export const onExport = (
                             }),
                             ...transformedBpmn.edges.map((edge: Edge) => {
                                 return {
-                                    "bpmn:sequenceFlow": {
+                                    "sequenceFlow": {
                                         id: "IdFlow_" + edge.id.replaceAll("-", ""),
                                         sourceRef: "Id_" + edge.source.replaceAll("-", ""),
                                         targetRef: "Id_" + edge.target.replaceAll("-", ""),
@@ -205,7 +210,7 @@ export const onExport = (
 
     function createStartNode(node: Node, edges: Edge[]): any {
         return {
-            "bpmn:startEvent": {
+            "startEvent": {
                 id: "Id_" + node.id.replaceAll("-", ""),
                 children: [
                     ...getOutgoingEdgeChildren(edges, node),
@@ -216,7 +221,7 @@ export const onExport = (
 
     function createEndNode(node: Node, edges: Edge[]): any {
         return {
-            "bpmn:endEvent": {
+            "endEvent": {
                 id: "Id_" + node.id.replaceAll("-", ""),
                 children: [
                     ...getIncomingEdgeChildren(edges, node),
@@ -234,22 +239,22 @@ export const onExport = (
 
         return [
             {
-                "bpmn:task": {
+                "task": {
                     id: "Id_" + node.id.replaceAll("-", ""),
                     name: activityNodeData.task,
                     children: [
                         {
-                            "bpmn:property": {
+                            "property": {
                                 id: propertyId,
                             }
                         },
                         {
-                            "bpmn:dataInputAssociation": {
+                            "dataInputAssociation": {
                                 id: inputDataAssociationId,
                                 sourceRef: dataObjectReferenceId,
                                 children: [
                                     {
-                                        "bpmn:targetRef": {
+                                        "targetRef": {
                                             children: propertyId
                                         }
                                     }
@@ -262,14 +267,14 @@ export const onExport = (
                 }
             },
             {
-                "bpmn:dataObjectReference": {
+                "dataObjectReference": {
                     id: dataObjectReferenceId,
                     name: JSON.stringify(activityNodeData).replaceAll("\"", "&quot;"),
                     dataObjectRef: dataObjectId
                 }
             },
             {
-                "bpmn:dataObject": {
+                "dataObject": {
                     id: dataObjectId
                 }
             }
@@ -279,7 +284,7 @@ export const onExport = (
     function createInfoNode(node: Node, edges: Edge[]): any {
         const infoNodeData = node.data as InfoNodeData
         return {
-            "bpmn:task": {
+            "task": {
                 id: "Id_" + node.id.replaceAll("-", ""),
                 name: "Info: " + infoNodeData.infoText,
                 children: [
@@ -293,7 +298,7 @@ export const onExport = (
     function createGatewayNode(node: Node, edges: Edge[]): any {
         const gatewayNodeData = node.data as GatewayNodeData
         return {
-            "bpmn:exclusiveGateway": {
+            "exclusiveGateway": {
                 id: "Id_" + node.id.replaceAll("-", ""),
                 name: gatewayNodeData.variableName + " " + gatewayNodeData.comparison + " " + gatewayNodeData.valueToCompare,
                 children: [
@@ -307,7 +312,7 @@ export const onExport = (
     function getOutgoingEdgeChildren(edges: Edge[], currentNode: Node): any {
         return edges.filter((edge) => edge.source === currentNode.id).map(edge => {
             return {
-                "bpmn:outgoing": {
+                "outgoing": {
                     children: "IdFlow_" + edge.id.replaceAll("-", "")
                 }
             }
@@ -317,7 +322,7 @@ export const onExport = (
     function getIncomingEdgeChildren(edges: Edge[], currentNode: Node): any {
         return edges.filter((edge) => edge.target === currentNode.id).map(edge => {
             return {
-                "bpmn:incoming": {
+                "incoming": {
                     children: "IdFlow_" + edge.id.replaceAll("-", "")
                 }
             }
@@ -333,22 +338,22 @@ export const onExport = (
 
         return [
             {
-                "bpmn:task": {
+                "task": {
                     id: "Id_" + node.id.replaceAll("-", ""),
                     name: challengeNodeData.challengeType,
                     children: [
                         {
-                            "bpmn:property": {
+                            "property": {
                                 id: propertyId,
                             }
                         },
                         {
-                            "bpmn:dataInputAssociation": {
+                            "dataInputAssociation": {
                                 id: inputDataAssociationId,
                                 sourceRef: dataObjectReferenceId,
                                 children: [
                                     {
-                                        "bpmn:targetRef": {
+                                        "targetRef": {
                                             children: propertyId
                                         }
                                     }
@@ -361,14 +366,14 @@ export const onExport = (
                 }
             },
             {
-                "bpmn:dataObjectReference": {
+                "dataObjectReference": {
                     id: dataObjectReferenceId,
                     name: JSON.stringify(challengeNodeData).replaceAll("\"", "&quot;"),
                     dataObjectRef: dataObjectId
                 }
             },
             {
-                "bpmn:dataObject": {
+                "dataObject": {
                     id: dataObjectId
                 }
             }
