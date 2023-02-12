@@ -4,19 +4,16 @@ import SelectWithCustomInputOption from "./SelectWithCustomInputOption";
 
 export interface ConditionOptionsProps {
     variables: string[]
-    selectedVariable: string
-    onVariableChanged: (newVariable: string) => void
+    value1: string
+    onValue1Changed: (newVariable: string) => void
     selectedComparison: Comparisons
-    onComparisonChanges: (newComparison: Comparisons) => void
-    valueToCompare: string
-    onValueToCompareChanged: (newValueToCompare: string) => void
+    onComparisonChanged: (newComparison: Comparisons) => void
+    value2: string
+    onValue2Changed: (newValueToCompare: string) => void
     conditionOptionsSpanStyle?: any
 }
 
 export default function ConditionOption(props: ConditionOptionsProps) {
-
-    console.log("Value1:", props.selectedVariable)
-    console.log("Value2:", props.valueToCompare)
 
     return (
         <span style={{
@@ -28,8 +25,8 @@ export default function ConditionOption(props: ConditionOptionsProps) {
         }}>
             <SelectWithCustomInputOption
                 values={props.variables}
-                selectedValue={props.selectedVariable}
-                onValueChanged={props.onVariableChanged}
+                selectedValue={props.value1}
+                onValueChanged={props.onValue1Changed}
             />
             <select
                 style={{
@@ -40,7 +37,7 @@ export default function ConditionOption(props: ConditionOptionsProps) {
                 id="comparison"
                 className="nodrag"
                 onChange={(event) => {
-                    props.onComparisonChanges(event.target.value as Comparisons)
+                    props.onComparisonChanged(event.target.value as Comparisons)
                 }}
             >
                 {
@@ -51,8 +48,8 @@ export default function ConditionOption(props: ConditionOptionsProps) {
             </select>
             <SelectWithCustomInputOption
                 values={props.variables}
-                selectedValue={props.valueToCompare}
-                onValueChanged={props.onValueToCompareChanged}
+                selectedValue={props.value2}
+                onValueChanged={props.onValue2Changed}
             />
         </span>
     )

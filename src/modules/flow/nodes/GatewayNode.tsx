@@ -6,9 +6,9 @@ import ConditionOption from "../../form/ConditionOption";
 
 export type GatewayNodeData = {
     backgroundColor?: string
-    variableName?: string,
+    value1?: string,
     comparison?: Comparisons,
-    valueToCompare?: string
+    value2?: string
 }
 
 export default function GatewayNode({ id, selected, data }: NodeProps<GatewayNodeData>) {
@@ -18,9 +18,9 @@ export default function GatewayNode({ id, selected, data }: NodeProps<GatewayNod
     const getAvailableVariableNames = useStore((state) => state.getAvailableVariableNames)
     const updateNodeData = useStore((state) => state.updateNodeData);
     const [availableVariableNames, setAvailableVariableNames] = useState<string[]>([])
-    const [selectedVariable, setSelectedVariable] = useState(data.variableName || "{" + getAvailableVariableNames(id)[0] + "}");
+    const [value1, setValue1] = useState(data.value1 || "{" + getAvailableVariableNames(id)[0] + "}");
     const [comparison, setComparison] = useState(data.comparison || Comparisons.EQUALS);
-    const [valueToCompare, setValueToCompare] = useState(data.valueToCompare || "{" + getAvailableVariableNames(id)[0] + "}");
+    const [value2, setValue2] = useState(data.value2 || "{" + getAvailableVariableNames(id)[0] + "}");
 
     useEffect(() => {
         setAvailableVariableNames(getAvailableVariableNames(id))
@@ -29,22 +29,22 @@ export default function GatewayNode({ id, selected, data }: NodeProps<GatewayNod
     useEffect(() => {
         updateNodeData<GatewayNodeData>(id, {
             backgroundColor: data.backgroundColor,
-            variableName: selectedVariable,
+            value1: value1,
             comparison: comparison,
-            valueToCompare: valueToCompare
+            value2: value2
         })
-    }, [id, selectedVariable, comparison, valueToCompare, updateNodeData])
+    }, [id, value1, comparison, value2, updateNodeData])
 
     return (
         <div style={{ backgroundColor: "transparent", position: "relative" }}>
             <ConditionOption
                 variables={ availableVariableNames }
-                selectedVariable={ selectedVariable }
-                onVariableChanged={ newVariable => setSelectedVariable(newVariable) }
+                value1={ value1 }
+                onValue1Changed={newValue => setValue1(newValue) }
                 selectedComparison={ comparison }
-                onComparisonChanges={ newComparison => setComparison(newComparison) }
-                valueToCompare={ valueToCompare }
-                onValueToCompareChanged={ newValueToCompare => setValueToCompare(newValueToCompare) }
+                onComparisonChanged={newComparison => setComparison(newComparison) }
+                value2={ value2 }
+                onValue2Changed={newValue => setValue2(newValue) }
                 conditionOptionsSpanStyle={{
                     position: 'fixed',
                     right: -60,

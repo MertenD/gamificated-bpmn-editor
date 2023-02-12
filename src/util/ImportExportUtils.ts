@@ -31,12 +31,10 @@ export const onLoad = (changeEvent: any, reactFlowInstance: ReactFlowInstance) =
                 accumulator[node.id] = uuidv4()
                 return accumulator;
             }, {});
-            const newNodes = bpmnDto.nodes.map((node) => {
-                // @ts-ignore
+            const newNodes = bpmnDto.nodes.map((node: Node) => {
                 return { ...node, id: newIdPairs[node.id], parentNode: node.parentNode !== undefined ? newIdPairs[node.parentNode] : undefined }
             })
-            const newEdges = bpmnDto.edges.map((edge) => {
-                // @ts-ignore
+            const newEdges = bpmnDto.edges.map((edge: Edge) => {
                 return { ...edge, source: newIdPairs[edge.source], target: newIdPairs[edge.target]}
             })
 
@@ -300,7 +298,7 @@ export const onExport = (
         return {
             "exclusiveGateway": {
                 id: "Id_" + node.id.replaceAll("-", ""),
-                name: gatewayNodeData.variableName + " " + gatewayNodeData.comparison + " " + gatewayNodeData.valueToCompare,
+                name: gatewayNodeData.value1 + " " + gatewayNodeData.comparison + " " + gatewayNodeData.value2,
                 children: [
                     ...getIncomingEdgeChildren(edges, node),
                     ...getOutgoingEdgeChildren(edges, node)

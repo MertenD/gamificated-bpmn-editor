@@ -6,12 +6,12 @@ export interface OptionalConditionOptionsProps {
     hasCondition: boolean
     setHasCondition: (newValue: boolean) => void
     variables: string[]
-    selectedVariable: string
-    onVariableChanged: (newVariable: string) => void
+    value1: string
+    onValue1Changed: (newVariable: string) => void
     selectedComparison: Comparisons
     onComparisonChanges: (newComparison: Comparisons) => void
-    valueToCompare: string
-    onValueToCompareChanged: (newValueToCompare: string) => void
+    value2: string
+    onValue2Changed: (newValueToCompare: string) => void
     conditionOptionsSpanStyle?: any
 }
 
@@ -33,12 +33,12 @@ export default function OptionalConditionOption(props: OptionalConditionOptionsP
             { props.hasCondition && (
                 <ConditionOption
                     variables={ props.variables }
-                    selectedVariable={ props.selectedVariable }
-                    onVariableChanged={ newVariable => props.onVariableChanged(newVariable) }
+                    value1={ props.value1 }
+                    onValue1Changed={newVariable => props.onValue1Changed(newVariable) }
                     selectedComparison={ props.selectedComparison }
-                    onComparisonChanges={ newComparison => props.onComparisonChanges(newComparison) }
-                    valueToCompare={ props.valueToCompare }
-                    onValueToCompareChanged={ newValueToCompare => props.onValueToCompareChanged(newValueToCompare) }
+                    onComparisonChanged={newComparison => props.onComparisonChanges(newComparison) }
+                    value2={ props.value2 }
+                    onValue2Changed={newValueToCompare => props.onValue2Changed(newValueToCompare) }
                     conditionOptionsSpanStyle={ props.conditionOptionsSpanStyle }
                 />
             )}

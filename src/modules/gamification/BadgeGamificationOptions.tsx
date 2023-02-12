@@ -8,9 +8,9 @@ import {Comparisons} from "../../model/Comparisons";
 export type BadgeGamificationOptionsData = {
     badgeType?: BadgeType,
     hasCondition?: boolean
-    variableName?: string,
+    value1?: string,
     comparison?: Comparisons,
-    valueToCompare?: string
+    value2?: string
 }
 
 interface BadgeGamificationOptionsProps {
@@ -29,9 +29,9 @@ export default function BadgeGamificationOptions(props: BadgeGamificationOptions
     const [availableVariableNames, setAvailableVariableNames] = useState<string[]>([])
     const [badgeType, setBadgeType] = useState(props.gamificationOptions.badgeType || BadgeType.EXPLORER_BATCH)
     const [hasCondition, setHasCondition] = useState<boolean>(props.gamificationOptions.hasCondition || false)
-    const [selectedVariable, setSelectedVariable] = useState(props.gamificationOptions.variableName || "{" + getAvailableVariableNames(props.parentNodeId,  props.parentVariableName)[0] + "}");
+    const [value1, setValue1] = useState(props.gamificationOptions.value1 || "{" + getAvailableVariableNames(props.parentNodeId,  props.parentVariableName)[0] + "}");
     const [comparison, setComparison] = useState(props.gamificationOptions.comparison || Comparisons.EQUALS);
-    const [valueToCompare, setValueToCompare] = useState(props.gamificationOptions.valueToCompare || "{" + getAvailableVariableNames(props.parentNodeId,  props.parentVariableName)[0] + "}");
+    const [value2, setValue2] = useState(props.gamificationOptions.value2 || "{" + getAvailableVariableNames(props.parentNodeId,  props.parentVariableName)[0] + "}");
 
     useEffect(() => {
         setAvailableVariableNames(getAvailableVariableNames(props.parentNodeId, props.parentVariableName))
@@ -41,11 +41,11 @@ export default function BadgeGamificationOptions(props: BadgeGamificationOptions
         props.onChange({
             badgeType: badgeType,
             hasCondition: hasCondition,
-            variableName: selectedVariable,
+            value1: value1,
             comparison: comparison,
-            valueToCompare: valueToCompare
+            value2: value2
         })
-    }, [badgeType, hasCondition, selectedVariable, comparison, valueToCompare])
+    }, [badgeType, hasCondition, value1, comparison, value2])
 
     return (
         <>
@@ -59,12 +59,12 @@ export default function BadgeGamificationOptions(props: BadgeGamificationOptions
                 hasCondition={hasCondition}
                 setHasCondition={ newValue => setHasCondition(newValue) }
                 variables={availableVariableNames}
-                selectedVariable={selectedVariable}
-                onVariableChanged={ newVariable => setSelectedVariable(newVariable) }
+                value1={value1}
+                onValue1Changed={newValue => setValue1(newValue) }
                 selectedComparison={ comparison }
                 onComparisonChanges={ newComparison => setComparison(newComparison) }
-                valueToCompare={ valueToCompare }
-                onValueToCompareChanged={ newValueToCompare => setValueToCompare(newValueToCompare) }
+                value2={ value2 }
+                onValue2Changed={newValue => setValue2(newValue) }
             /> }
         </>
     )
