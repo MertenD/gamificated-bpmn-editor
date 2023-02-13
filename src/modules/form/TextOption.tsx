@@ -31,9 +31,9 @@ export default function TextOption(props: TextOptionProps) {
                 onChange={(event) => {
                     props.onValueChanged(event.target.value)
                 }}
-                list={"suggestions"}
+                list={"suggestions" + props.title}
             />
-                <datalist id={"suggestions"}>
+                <datalist id={"suggestions" + props.title}>
                 {
                     (props.suggestions || []).map(suggestion => {
                         return <option value={suggestion.value}>
