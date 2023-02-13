@@ -76,6 +76,24 @@ export default function ActivityNode({ id, selected, data }: NodeProps<ActivityN
                                         title={ "Input regex" }
                                         placeholder={ "e.g.: [0-9]+" }
                                         value={ inputRegex }
+                                        suggestions={[
+                                            {
+                                                name: "Number",
+                                                value: "[0-9]+"
+                                            },
+                                            {
+                                                name: "Text without numbers",
+                                                value: "[a-zA-Z .,-_]+"
+                                            },
+                                            {
+                                                name: "Text with numbers",
+                                                value: "[a-zA-Z .,-_0-9]+"
+                                            },
+                                            {
+                                                name: "Single word",
+                                                value: "[a-zA-Z]+"
+                                            }
+                                        ]}
                                         onValueChanged={ newValue => setInputRegex(newValue) }
                                     />
                                 )

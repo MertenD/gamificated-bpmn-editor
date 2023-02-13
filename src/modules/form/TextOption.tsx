@@ -4,6 +4,7 @@ export interface TextOptionProps {
     title: string,
     placeholder: string,
     value: string,
+    suggestions?: { name: string, value: string}[],
     onValueChanged: (newValue: string) => void
 }
 
@@ -30,7 +31,17 @@ export default function TextOption(props: TextOptionProps) {
                 onChange={(event) => {
                     props.onValueChanged(event.target.value)
                 }}
+                list={"suggestions"}
             />
+                <datalist id={"suggestions"}>
+                {
+                    (props.suggestions || []).map(suggestion => {
+                        return <option value={suggestion.value}>
+                            { suggestion.name }
+                        </option>
+                    })
+                }
+                </datalist>
         </span>
     )
 }
