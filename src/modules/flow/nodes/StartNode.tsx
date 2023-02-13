@@ -11,7 +11,7 @@ export default function StartNode({ id, selected, data}: NodeProps<StartNodeData
     return (
         <div style={{
             ...startNodeShapeStyle,
-            backgroundColor: data.backgroundColor,
+            backgroundColor: data.backgroundColor || startNodeShapeStyle.backgroundColor,
             borderColor: selected ? selectedColor : undefined
         }}>
             <Handle style={handleStyle} type="source" position={Position.Right} />

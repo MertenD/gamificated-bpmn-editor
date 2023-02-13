@@ -73,7 +73,7 @@ export default function GatewayNode({ id, selected, data }: NodeProps<GatewayNod
             </div>
             <div style={{
                 ...GatewayShapeStyle,
-                backgroundColor: data.backgroundColor,
+                backgroundColor: data.backgroundColor || GatewayShapeStyle.backgroundColor,
                 borderColor: selected ? selectedColor : undefined
             }} >
                 <hr style={{ backgroundColor: "black", border: "1px solid black", width: "70%", marginTop: 14 }}/>

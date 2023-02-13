@@ -11,7 +11,7 @@ export default function EndNode({ id, selected, data}: NodeProps<EndNodeData>) {
     return (
         <div style={{
             ...endNodeShapeStyle,
-            backgroundColor: data.backgroundColor,
+            backgroundColor: data.backgroundColor || endNodeShapeStyle.backgroundColor,
             borderColor: selected ? selectedColor : undefined
         }} >
             <Handle style={handleStyle} type="target" position={Position.Left} />
