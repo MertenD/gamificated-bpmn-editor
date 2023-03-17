@@ -27,7 +27,7 @@ export default function BadgeGamificationOptions(props: BadgeGamificationOptions
     const edges = useStore((state) => state.edges)
     const getAvailableVariableNames = useStore((state) => state.getAvailableVariableNames)
     const [availableVariableNames, setAvailableVariableNames] = useState<string[]>([])
-    const [badgeType, setBadgeType] = useState(props.gamificationOptions.badgeType || BadgeType.EXPLORER_BATCH)
+    const [badgeType, setBadgeType] = useState(props.gamificationOptions.badgeType || BadgeType.EXPLORER_BADGE)
     const [hasCondition, setHasCondition] = useState<boolean>(props.gamificationOptions.hasCondition || false)
     const [value1, setValue1] = useState(props.gamificationOptions.value1 || "{" + getAvailableVariableNames(props.parentNodeId,  props.parentVariableName)[0] + "}");
     const [comparison, setComparison] = useState(props.gamificationOptions.comparison || Comparisons.EQUALS);

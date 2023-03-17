@@ -1,5 +1,5 @@
 export enum BadgeType {
-    EXPLORER_BATCH = "Explorer batch",
-    COMPLETION_BATCH = "Completion batch",
-    SPEED_BATCH = "Speed Batch"
+    EXPLORER_BADGE = "Explorer Badge",
+    COMPLETION_BADGE = "Completion Badge",
+    SPEED_BADGE = "Speed Badge"
 }
