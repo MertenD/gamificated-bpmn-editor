@@ -21,6 +21,8 @@ export default function TextOption(props: TextOptionProps) {
         }}>
             { props.title + ":" }
             <input
+                id={props.title}
+                key={props.title}
                 style={{
                     marginLeft: 10
                 }}
