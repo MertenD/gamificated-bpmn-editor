@@ -21,6 +21,7 @@ import ChallengeNode from "./modules/flow/nodes/ChallengeNode";
 import {NodeTypes} from "./model/NodeTypes";
 import {PointsType} from "./model/PointsType";
 import InfoNode from "./modules/flow/nodes/InfoNode";
+import GamificationEventNode from "./modules/flow/nodes/GamificationEventNode";
 
 export type RFState = {
     nodes: Node[];
@@ -65,7 +66,8 @@ export const useStore = create<RFState>((set, get) => ({
         endNode: EndNode,
         gatewayNode: GatewayNode,
         challengeNode: ChallengeNode,
-        infoNode: InfoNode
+        infoNode: InfoNode,
+        gamificationEventNode: GamificationEventNode
     },
     onNodesChange: (changes: NodeChange[]) => {
         // Ungroup group if the deleted node is a group so the children are not deleted with the group

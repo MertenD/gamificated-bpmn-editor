@@ -21,7 +21,8 @@ export default function NumberOption(props: NumberOptionProps) {
             { props.title + ":" }
             <input
                 style={{
-                    marginLeft: 10
+                    marginLeft: 10,
+                    width: "50%"
                 }}
                 type="number"
                 placeholder={ props.placeholder }

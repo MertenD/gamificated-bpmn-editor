@@ -7,6 +7,7 @@ import {GatewayShapeStyle} from "../nodes/GatewayNode";
 import {NodeTypes} from "../../../model/NodeTypes";
 import {challengeShapeStyle} from "../nodes/ChallengeNode";
 import {infoNodeShapeStyle} from "../nodes/InfoNode";
+import {eventShapeStyle} from "../nodes/GamificationEventNode";
 
 export interface OnCanvasNodesToolbarProps {
     open: boolean;
@@ -18,7 +19,7 @@ export default function OnCanvasNodesToolbar(props: OnCanvasNodesToolbarProps) {
     const { onClose, open, position } = props;
     // Change width and height when adding new elements to toolbar
     const width = 160
-    const height = 404
+    const height = 500
 
     const handleClose = () => {
         onClose(null)
@@ -61,6 +62,10 @@ export default function OnCanvasNodesToolbar(props: OnCanvasNodesToolbarProps) {
                 Info
                 <div style={{ ...infoNodeShapeStyle, marginBottom: 15 }} onClick={() => {
                     handleNodeSelected(NodeTypes.INFO_NODE)
+                }} />
+                Gam. Event
+                <div style={{ ...eventShapeStyle, marginBottom: 15}} onClick={() => {
+                    handleNodeSelected(NodeTypes.GAMIFICATION_EVENT_NODE)
                 }} />
             </div>
         </Dialog>

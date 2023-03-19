@@ -2,7 +2,6 @@ import ReactFlow, {
     Background,
     BackgroundVariant,
     Controls,
-    MiniMap,
     Node,
     OnConnectStartParams,
     Panel,
@@ -92,11 +91,11 @@ function DragAndDropFlow() {
         switch(nodeType) {
             case NodeTypes.START_NODE:
                 yOffset = 21
-                zIndex = 5
+                zIndex = 6
                 break
             case NodeTypes.END_NODE:
                 yOffset = 21
-                zIndex = 4
+                zIndex = 5
                 break
             case NodeTypes.ACTIVITY_NODE:
                 yOffset = 121
@@ -104,7 +103,7 @@ function DragAndDropFlow() {
                 break
             case NodeTypes.GATEWAY_NODE:
                 yOffset = 18
-                zIndex = 3
+                zIndex = 4
                 break
             case NodeTypes.CHALLENGE_NODE:
                 yOffset = 200
@@ -113,6 +112,10 @@ function DragAndDropFlow() {
             case NodeTypes.INFO_NODE:
                 yOffset = 90
                 zIndex = 2
+                break
+            case NodeTypes.GAMIFICATION_EVENT_NODE:
+                yOffset = 38
+                zIndex = 3
         }
 
         const id = uuidv4();

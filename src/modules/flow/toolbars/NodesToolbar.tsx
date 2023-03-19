@@ -6,6 +6,7 @@ import {endNodeShapeStyle} from "../nodes/EndNode";
 import {NodeTypes} from "../../../model/NodeTypes";
 import {challengeShapeStyle} from "../nodes/ChallengeNode";
 import {infoNodeShapeStyle} from "../nodes/InfoNode";
+import {eventShapeStyle} from "../nodes/GamificationEventNode";
 
 export default function NodesToolbar() {
     const onDragStart = (event: any, nodeType: String, nodeData: any) => {
@@ -48,6 +49,10 @@ export default function NodesToolbar() {
                 Info
                 <div draggable style={{ ...infoNodeShapeStyle, marginBottom: 10 }} onDragStart={(event) => {
                     onDragStart(event, NodeTypes.INFO_NODE, {})
+                }} />
+                Gam. Event
+                <div draggable style={{ ...eventShapeStyle, marginBottom: 10}} onDragStart={(event) => {
+                    onDragStart(event, NodeTypes.GAMIFICATION_EVENT_NODE, {})
                 }} />
             </div>
         </aside>
