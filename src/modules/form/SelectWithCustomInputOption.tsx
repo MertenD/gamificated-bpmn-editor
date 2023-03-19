@@ -1,5 +1,7 @@
 import React, {useEffect, useState} from 'react';
 
+export const CUSTOM_INPUT_VALUE = "customInput"
+
 export interface SelectWithCustomInputOptionProps {
     values: string[],
     selectedValue: string,
@@ -15,7 +17,7 @@ export default function SelectWithCustomInputOption(props: SelectWithCustomInput
         const isCustom = !props.values.includes(props.selectedValue.replaceAll("{", "").replaceAll("}", ""))
         if (isCustom) {
             setCustomInput(true)
-            setSelectValue("customInput")
+            setSelectValue(CUSTOM_INPUT_VALUE)
         } else {
             setCustomInput(false)
             setSelectValue(props.selectedValue)
@@ -23,7 +25,7 @@ export default function SelectWithCustomInputOption(props: SelectWithCustomInput
     }, [props.values])
 
     const handleSelectChange = (event: any) => {
-        if (event.target.value === 'customInput') {
+        if (event.target.value === CUSTOM_INPUT_VALUE) {
             props.onValueChanged("")
             setCustomInput(true);
         } else {
@@ -54,7 +56,7 @@ export default function SelectWithCustomInputOption(props: SelectWithCustomInput
                         {value}
                     </option>
                 })}
-                <option value="customInput">[custom value]</option>
+                <option value={CUSTOM_INPUT_VALUE}>[custom value]</option>
             </select>
             {customInput && (
                 <input
