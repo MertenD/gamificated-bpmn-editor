@@ -126,7 +126,7 @@ export default memo(function ChallengeNode({ id, selected, data }: NodeProps<Cha
                         gamificationType={ rewardType }
                         gamificationOptions={ gamificationOptions }
                         onChange={ gamificationOptions => setGamificationOptions(gamificationOptions) }
-                        withoutOptionalCondition={true}
+                        withoutOptionalCondition={false}
                     />
                 </OptionsContainer>
             </div>
