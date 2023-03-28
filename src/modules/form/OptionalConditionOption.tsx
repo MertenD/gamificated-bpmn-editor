@@ -20,7 +20,7 @@ export default function OptionalConditionOption(props: OptionalConditionOptionsP
     return (
         <>
             <div style={{ width: "100%", textAlign: "left", marginBottom: 5}}>
-                Under condition:
+                Under condition (optional):
                 <input
                     style={{
                         marginLeft: 10

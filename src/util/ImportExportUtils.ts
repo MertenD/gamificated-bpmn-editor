@@ -7,6 +7,7 @@ import {ActivityNodeData} from "../modules/flow/nodes/ActivityNode";
 import {InfoNodeData} from "../modules/flow/nodes/InfoNode";
 import {GatewayNodeData} from "../modules/flow/nodes/GatewayNode";
 import {ChallengeNodeData} from "../modules/flow/nodes/ChallengeNode";
+import {GamificationEventNodeData} from "../modules/flow/nodes/GamificationEventNode";
 
 export const onSave = (nodes: Node[], edges: Edge[]) => {
     const downloadableContent = "data:text/json;charset=utf-8," + encodeURIComponent(JSON.stringify(serializeToDto(nodes, edges), null, 2));
@@ -44,6 +45,7 @@ export const onLoad = (changeEvent: any, reactFlowInstance: ReactFlowInstance) =
     };
 }
 
+// TODO Add Gamification Event Node
 export const onExport = (
     nodes: Node[],
     edges: Edge[],
@@ -84,6 +86,8 @@ export const onExport = (
                                         return createGatewayNode(node, transformedBpmn.edges)
                                     case NodeTypes.CHALLENGE_NODE:
                                         return createChallengeNode(node, transformedBpmn.edges)
+                                    case NodeTypes.GAMIFICATION_EVENT_NODE:
+                                        return createGamificationEventNode(node, transformedBpmn.edges)
                                 }
                             }),
                             ...transformedBpmn.edges.map((edge: Edge) => {
@@ -117,8 +121,8 @@ export const onExport = (
                                                             "dc:Bounds": {
                                                                 x: node.parentNode !== undefined ? node.position.x + (getNodeById(node.parentNode)?.position.x || 0) : node.position.x,
                                                                 y: node.parentNode !== undefined ? node.position.y + (getNodeById(node.parentNode)?.position.y || 0) : node.position.y,
-                                                                width: node.width,
-                                                                height: node.height
+                                                                width: node.type === NodeTypes.GAMIFICATION_EVENT_NODE ? 40 : node.width,
+                                                                height: node.type === NodeTypes.GAMIFICATION_EVENT_NODE ? 40 : node.height
                                                             }
                                                         }
                                                     ]
@@ -127,6 +131,7 @@ export const onExport = (
                                             switch (node.type as NodeTypes) {
                                                 case NodeTypes.ACTIVITY_NODE:
                                                 case NodeTypes.CHALLENGE_NODE:
+                                                case NodeTypes.GAMIFICATION_EVENT_NODE:
                                                     shapes.push({
                                                         "bpmndi:BPMNShape": {
                                                             id: "DataObjectReference_" + node.id.replaceAll("-", "") + "_di",
@@ -367,6 +372,57 @@ export const onExport = (
                 "dataObjectReference": {
                     id: dataObjectReferenceId,
                     name: JSON.stringify(challengeNodeData).replaceAll("\"", "&quot;"),
+                    dataObjectRef: dataObjectId
+                }
+            },
+            {
+                "dataObject": {
+                    id: dataObjectId
+                }
+            }
+        ]
+    }
+
+    function createGamificationEventNode(node: Node, edges: Edge[]): any {
+        const gamificationEventNodeData = node.data as GamificationEventNodeData
+        const propertyId = "Property_" + node.id.replaceAll("-", "")
+        const inputDataAssociationId = "DataInputAssociation_" + node.id.replaceAll("-", "")
+        const dataObjectReferenceId = "DataObjectReference_" + node.id.replaceAll("-", "")
+        const dataObjectId = "DataObject_" + node.id.replaceAll("-", "")
+
+        return [
+            {
+                "intermediateThrowEvent": {
+                    id: "Id_" + node.id.replaceAll("-", ""),
+                    name: gamificationEventNodeData.gamificationType,
+                    children: [
+                        {
+                            "property": {
+                                id: propertyId,
+                            }
+                        },
+                        {
+                            "dataInputAssociation": {
+                                id: inputDataAssociationId,
+                                sourceRef: dataObjectReferenceId,
+                                children: [
+                                    {
+                                        "targetRef": {
+                                            children: propertyId
+                                        }
+                                    }
+                                ]
+                            }
+                        },
+                        ...getIncomingEdgeChildren(edges, node),
+                        ...getOutgoingEdgeChildren(edges, node),
+                    ]
+                }
+            },
+            {
+                "dataObjectReference": {
+                    id: dataObjectReferenceId,
+                    name: JSON.stringify(gamificationEventNodeData).replaceAll("\"", "&quot;"),
                     dataObjectRef: dataObjectId
                 }
             },
