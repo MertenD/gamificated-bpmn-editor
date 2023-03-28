@@ -1,7 +1,7 @@
 import ReactFlow, {
     Background,
     BackgroundVariant,
-    Controls,
+    Controls, MiniMap,
     Node,
     OnConnectStartParams,
     Panel,
@@ -192,6 +192,14 @@ function DragAndDropFlow() {
             <Panel position="top-right">
                 <ControlsToolbar />
             </Panel>
+            <MiniMap nodeColor={(node) => {
+                if (node.type === NodeTypes.CHALLENGE_NODE) {
+                    return node.data.backgroundColor + "88"
+                }
+                return node.data.backgroundColor || "gray"
+            }} nodeStrokeWidth={3} zoomable pannable style={{
+                backgroundColor: "#aaa"
+            }} />
             <OnCanvasNodesToolbar
                 open={openOnCanvasNodeSelector}
                 position={lastEventPosition}
