@@ -2,6 +2,9 @@ import React from "react"
 import {Comparisons} from "../../model/Comparisons";
 import SelectWithCustomInputOption from "./SelectWithCustomInputOption";
 
+// TODO Bei den Variablen auch die Badges mitgeben, um überprüfen zu können ob diese
+// schon freigeschaltet worden sind
+
 export interface ConditionOptionsProps {
     variables: string[]
     value1: string

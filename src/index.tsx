@@ -4,6 +4,8 @@ import './index.css';
 import App from './App';
 import reportWebVitals from './reportWebVitals';
 
+// TODO Eiegene Badges und Points anlegen können mit Titel und Beschreibung
+
 const root = ReactDOM.createRoot(
   document.getElementById('root') as HTMLElement
 );

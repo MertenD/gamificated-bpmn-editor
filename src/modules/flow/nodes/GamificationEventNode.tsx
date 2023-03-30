@@ -29,6 +29,9 @@ export default function GamificationEventNode({ id, selected, data}: NodeProps<G
         })
     }, [id, gamificationType, gamificationOptions, updateNodeData])
 
+    // TODO Links Dropdown zwischen Ändere Punkte um und Setze Punkte auf
+    // Wenn ich noch bock habe kann ich auch auf der rechten Seite einbauen, dass man Variablen auswählen kann
+
     return (
         <div style={{
             ...eventShapeStyle,
@@ -61,5 +64,6 @@ export const eventShapeStyle = {
     borderRadius: 6,
     backgroundColor: "white",
     border: "3px solid black",
-    borderStyle: "double"
+    borderStyle: "double",
+    borderWidth: 5
 }

@@ -150,6 +150,7 @@ export const useStore = create<RFState>((set, get) => ({
             node.parentNode !== undefined && node.parentNode === nodeId
         )
     },
+    // TODO EndNotes dürfen nicht zu einer Challenge gehören
     updateNodeParent: (nodeToUpdate: Node, newParent: Node | undefined, oldParent: Node | undefined) => {
         set({
             nodes: get().nodes.map((node) => {
