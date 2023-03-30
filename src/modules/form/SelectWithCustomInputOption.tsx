@@ -51,12 +51,12 @@ export default function SelectWithCustomInputOption(props: SelectWithCustomInput
                 className="nodrag"
                 onChange={handleSelectChange}
             >
+                <option value={CUSTOM_INPUT_VALUE}>[custom value]</option>
                 {props.values.map((value) => {
                     return <option key={value} value={"{" + value + "}"}>
                         {value}
                     </option>
                 })}
-                <option value={CUSTOM_INPUT_VALUE}>[custom value]</option>
             </select>
             {customInput && (
                 <input

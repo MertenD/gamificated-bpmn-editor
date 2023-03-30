@@ -45,7 +45,6 @@ export const onLoad = (changeEvent: any, reactFlowInstance: ReactFlowInstance) =
     };
 }
 
-// TODO Add Gamification Event Node
 export const onExport = (
     nodes: Node[],
     edges: Edge[],

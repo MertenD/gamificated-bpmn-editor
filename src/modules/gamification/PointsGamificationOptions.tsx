@@ -5,11 +5,12 @@ import {Comparisons} from "../../model/Comparisons";
 import useStore from "../../store";
 import DropdownOption from "../form/DropdownOption";
 import {PointsApplicationMethod} from "../../model/PointsApplicationMethod";
+import SelectWithCustomInputOption from "../form/SelectWithCustomInputOption";
 
 export type PointsGamificationOptionsData = {
     pointType?: PointsType,
     pointsApplicationMethod: PointsApplicationMethod,
-    pointsForSuccess?: number,
+    pointsForSuccess?: string,
     hasCondition?: boolean
     value1?: string,
     comparison?: Comparisons,
@@ -30,8 +31,8 @@ export default function PointsGamificationOptions(props: PointsGamificationOptio
     const edges = useStore((state) => state.edges)
     const getAvailableVariableNames = useStore((state) => state.getAvailableVariableNames)
     const [pointType, setPointType] = useState(props.gamificationOptions.pointType || PointsType.EXPERIENCE)
-    const [pointsApplicationMethod, setPointsApplicationMethod] = useState(props.gamificationOptions.pointsApplicationMethod || PointsApplicationMethod.CHANGE_BY)
-    const [pointsForSuccess, setPointsForSuccess] = useState(props.gamificationOptions.pointsForSuccess || 0)
+    const [pointsApplicationMethod, setPointsApplicationMethod] = useState(props.gamificationOptions.pointsApplicationMethod || PointsApplicationMethod.INCREMENT_BY)
+    const [pointsForSuccess, setPointsForSuccess] = useState(props.gamificationOptions.pointsForSuccess || "0")
     const [availableVariableNames, setAvailableVariableNames] = useState<string[]>([])
     const [hasCondition, setHasCondition] = useState<boolean>(props.gamificationOptions.hasCondition || false)
     const [value1, setValue1] = useState(props.gamificationOptions.value1 || "{" + getAvailableVariableNames(props.parentNodeId,  props.parentVariableName)[0] + "}");
@@ -74,10 +75,7 @@ export default function PointsGamificationOptions(props: PointsGamificationOptio
                 marginBottom: 10
             }}>
                 <select
-                    style={{
-
-                    }}
-                    defaultValue={PointsApplicationMethod.CHANGE_BY}
+                    defaultValue={PointsApplicationMethod.INCREMENT_BY}
                     name="comparison"
                     id="comparison"
                     className="nodrag"
@@ -85,22 +83,20 @@ export default function PointsGamificationOptions(props: PointsGamificationOptio
                         setPointsApplicationMethod(event.target.value as PointsApplicationMethod)
                     }}
                 >
-                    <option key={PointsApplicationMethod.CHANGE_BY} value={PointsApplicationMethod.CHANGE_BY}>Change points by</option>
+                    <option key={PointsApplicationMethod.INCREMENT_BY} value={PointsApplicationMethod.INCREMENT_BY}>Increment points by</option>
                     <option key={PointsApplicationMethod.SET_TO} value={PointsApplicationMethod.SET_TO}>Set points to</option>
+                    <option key={PointsApplicationMethod.DECREMENT_BY} value={PointsApplicationMethod.DECREMENT_BY}>Decrement points by</option>
                 </select>
-                <input
-                    style={{
-                        marginLeft: 10,
-                        width: "50%"
-                    }}
-                    type="number"
-                    placeholder={ "Amount" }
-                    defaultValue={ pointsForSuccess }
-                    className="nodrag"
-                    onChange={(event) => {
-                        setPointsForSuccess(Number(event.target.value))
-                    }}
-                />
+                <div style={{
+                    marginLeft: 10,
+                    width: "50%"
+                }}>
+                    <SelectWithCustomInputOption
+                        values={availableVariableNames}
+                        selectedValue={pointsForSuccess}
+                        onValueChanged={newValue => setPointsForSuccess(newValue)}
+                    />
+                </div>
             </span>
             { (props.withoutOptionalCondition === undefined || !props.withoutOptionalCondition) && <OptionalConditionOption
                 hasCondition={hasCondition}

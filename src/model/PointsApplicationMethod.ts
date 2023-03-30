@@ -1,4 +1,5 @@
 export enum PointsApplicationMethod {
     SET_TO = "setTo",
-    CHANGE_BY = "changeBy"
+    INCREMENT_BY = "incrementBy",
+    DECREMENT_BY = "decrementBy"
 }
