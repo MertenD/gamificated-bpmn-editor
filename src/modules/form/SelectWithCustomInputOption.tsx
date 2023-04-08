@@ -40,28 +40,28 @@ export default function SelectWithCustomInputOption(props: SelectWithCustomInput
 
     return (
         <div style={{
-            width: 120
+            width: "100%"
         }}>
             <select
                 style={{
-                    width: 120
+                    width: "100%"
                 }}
                 value={selectValue}
                 name="value"
                 className="nodrag"
                 onChange={handleSelectChange}
             >
-                <option value={CUSTOM_INPUT_VALUE}>[custom value]</option>
                 {props.values.map((value) => {
                     return <option key={value} value={"{" + value + "}"}>
                         {value}
                     </option>
                 })}
+                <option value={CUSTOM_INPUT_VALUE}>[custom value]</option>
             </select>
             {customInput && (
                 <input
                     style={{
-                        width: 110
+                        width: "94%"
                     }}
                     name="value"
                     type="text"

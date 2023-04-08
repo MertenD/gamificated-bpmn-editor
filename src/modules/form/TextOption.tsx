@@ -17,7 +17,7 @@ export default function TextOption(props: TextOptionProps) {
             display: "flex",
             flexDirection: "row",
             justifyContent: "space-between",
-            marginBottom: 10
+            marginBottom: 10,
         }}>
             { props.title + ":" }
             <input

@@ -47,7 +47,7 @@ export default function GatewayNode({ id, selected, data }: NodeProps<GatewayNod
                 onValue2Changed={newValue => setValue2(newValue) }
                 conditionOptionsSpanStyle={{
                     position: 'fixed',
-                    right: -60,
+                    right: -310,
                     top: -5
                 }}
             />

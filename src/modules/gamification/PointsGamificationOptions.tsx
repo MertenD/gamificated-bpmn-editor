@@ -89,7 +89,7 @@ export default function PointsGamificationOptions(props: PointsGamificationOptio
                 </select>
                 <div style={{
                     marginLeft: 10,
-                    width: "50%"
+                    width: "45%"
                 }}>
                     <SelectWithCustomInputOption
                         values={availableVariableNames}

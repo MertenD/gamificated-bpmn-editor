@@ -2,11 +2,11 @@ import React, {useEffect, useState} from "react"
 import {BadgeType} from "../../model/BadgeType";
 import useStore from "../../store";
 import OptionalConditionOption from "../form/OptionalConditionOption";
-import DropdownOption from "../form/DropdownOption";
 import {Comparisons} from "../../model/Comparisons";
+import SelectWithCustomInputOption from "../form/SelectWithCustomInputOption";
 
 export type BadgeGamificationOptionsData = {
-    badgeType?: BadgeType,
+    badgeType?: string,
     hasCondition?: boolean
     value1?: string,
     comparison?: Comparisons,
@@ -49,12 +49,30 @@ export default function BadgeGamificationOptions(props: BadgeGamificationOptions
 
     return (
         <>
-            <DropdownOption
-                title={ "Badge type" }
-                values={ Object.values(BadgeType) }
-                selectedValue={ badgeType }
-                onValueChanged={ newValue => setBadgeType(newValue as BadgeType) }
-            />
+            <span style={{
+                flexWrap: "wrap",
+                width: "100%",
+                display: "flex",
+                flexDirection: "row",
+                justifyContent: "space-between",
+                marginBottom: 10
+            }}>
+                <div style={{
+                    flex: 1,
+                    textAlign: "start"
+                }}>
+                    Badge Type:
+                </div>
+                <div style={{
+                    flex: 1
+                }}>
+                    <SelectWithCustomInputOption
+                        values={ Object.values(BadgeType) }
+                        selectedValue={ badgeType.valueOf() }
+                        onValueChanged={ newValue => setBadgeType(newValue) }
+                    />
+                </div>
+            </span>
             { (props.withoutOptionalCondition === undefined || !props.withoutOptionalCondition) && <OptionalConditionOption
                 hasCondition={hasCondition}
                 setHasCondition={ newValue => setHasCondition(newValue) }

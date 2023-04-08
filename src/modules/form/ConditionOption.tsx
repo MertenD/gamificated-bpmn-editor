@@ -20,17 +20,21 @@ export default function ConditionOption(props: ConditionOptionsProps) {
 
     return (
         <span style={{
-            width: "100%",
+            width: 270,
             display: "flex",
             flexDirection: "row",
             justifyContent: "space-between",
             ...props.conditionOptionsSpanStyle
         }}>
-            <SelectWithCustomInputOption
-                values={props.variables}
-                selectedValue={props.value1}
-                onValueChanged={props.onValue1Changed}
-            />
+            <div style={{
+                width: 120
+            }}>
+                <SelectWithCustomInputOption
+                    values={props.variables}
+                    selectedValue={props.value1}
+                    onValueChanged={props.onValue1Changed}
+                />
+            </div>
             <select
                 style={{
                     width: 50
@@ -49,11 +53,15 @@ export default function ConditionOption(props: ConditionOptionsProps) {
                     })
                 }
             </select>
-            <SelectWithCustomInputOption
-                values={props.variables}
-                selectedValue={props.value2}
-                onValueChanged={props.onValue2Changed}
-            />
+            <div style={{
+                width: 120
+            }}>
+                <SelectWithCustomInputOption
+                    values={props.variables}
+                    selectedValue={props.value2}
+                    onValueChanged={props.onValue2Changed}
+                />
+            </div>
         </span>
     )
 }
