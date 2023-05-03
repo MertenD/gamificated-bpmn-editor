@@ -340,7 +340,7 @@ export const onExport = (
 
         return [
             {
-                "task": {
+                "intermediateThrowEvent": {
                     id: "Id_" + node.id.replaceAll("-", ""),
                     name: challengeNodeData.challengeType,
                     children: [
@@ -447,7 +447,7 @@ function transformChallengesToRealBpmn(
         const lastChildren = getLastChildrenInChallenge(challengeNode, edges, getChildren)
 
         const substitutedIngoingEdges = substituteIngoingEdges(firstChildren, challengeNode, edges)
-        const substitutedOutgoingEdges = substituteOutgoingEdges(lastChildren, challengeNode, edges)
+        const substitutedOutgoingEdges = substituteOutgoingEdges(lastChildren, challengeNode, edges, nodes)
 
         return mergeBpmnDto([substitutedIngoingEdges, substitutedOutgoingEdges])
     }))
@@ -557,7 +557,7 @@ function substituteIngoingEdges(firstChildren: Node[], challengeNode: Node, edge
     } as BpmnDto
 }
 
-function substituteOutgoingEdges(lastChildren: Node[], challengeNode: Node, edges: Edge[]): BpmnDto {
+function substituteOutgoingEdges(lastChildren: Node[], challengeNode: Node, edges: Edge[], nodes: Node[]): BpmnDto {
 
     // Array to store all new nodes
     let newNodes: Node[] = []
@@ -565,39 +565,43 @@ function substituteOutgoingEdges(lastChildren: Node[], challengeNode: Node, edge
     let newEdges: Edge[] = []
 
     lastChildren.map((node) => {
-        const outgoingEdge = edges.find((edge) => edge.source === node.id)
-        const incomingEdgeId = uuidv4()
-        const challengeEndId = uuidv4()
-        const newChallengeEndNode = {
-            id: challengeEndId,
-            type: NodeTypes.CHALLENGE_NODE,
-            position: {
-                x: node.position.x + challengeNode.position.x + (node.width || 0) + 50,
-                y: node.position.y + challengeNode.position.y + (node.height || 0) / 2
-            },
-            width: 50,
-            height: 50,
-            parent: challengeNode.id,
-            data: {
-                isStart: false,
-                ...challengeNode.data
-            }
-        } as Node
-        newNodes.push(newChallengeEndNode)
-        const newIncomingEdge = {
-            id: incomingEdgeId,
-            source: node.id,
-            sourceHandle: outgoingEdge?.sourceHandle,
-            target: challengeEndId,
-        } as Edge
-        newEdges.push(newIncomingEdge)
-        const newOutgoingEdge = {
-            id: outgoingEdge?.id,
-            source: challengeEndId,
-            target: outgoingEdge?.target,
-            targetHandle: outgoingEdge?.targetHandle
-        } as Edge
-        newEdges.push(newOutgoingEdge)
+        const outgoingEdges = edges.filter((edge) => edge.source === node.id)
+        outgoingEdges
+            .filter((edge) => nodes.find((node => node.id === edge.target))?.parentNode === undefined)
+            .forEach((outgoingEdge, index) => {
+                const challengeEndId = uuidv4() + outgoingEdge.id
+                const incomingEdgeId = uuidv4() + outgoingEdge.id
+                const newChallengeEndNode = {
+                    id: challengeEndId,
+                    type: NodeTypes.CHALLENGE_NODE,
+                    position: {
+                        x: node.position.x + challengeNode.position.x + (node.width || 0) + 50,
+                        y: (node.position.y + challengeNode.position.y + (node.height || 0) / 2) + (index === 0 ? 30 : -60)
+                    },
+                    width: 50,
+                    height: 50,
+                    parent: challengeNode.id,
+                    data: {
+                        isStart: false,
+                        ...challengeNode.data
+                    }
+                } as Node
+                newNodes.push(newChallengeEndNode)
+                const newIncomingEdge = {
+                    id: incomingEdgeId,
+                    source: node.id,
+                    sourceHandle: outgoingEdge?.sourceHandle,
+                    target: challengeEndId,
+                } as Edge
+                newEdges.push(newIncomingEdge)
+                const newOutgoingEdge = {
+                    id: outgoingEdge?.id,
+                    source: challengeEndId,
+                    target: outgoingEdge?.target,
+                    targetHandle: outgoingEdge?.targetHandle
+                } as Edge
+                newEdges.push(newOutgoingEdge)
+            })
     })
 
     return {
