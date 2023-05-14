@@ -271,7 +271,7 @@ export const onExport = (
             {
                 "dataObjectReference": {
                     id: dataObjectReferenceId,
-                    name: JSON.stringify(activityNodeData).replaceAll("\"", "&quot;"),
+                    name: JSON.stringify(activityNodeData),
                     dataObjectRef: dataObjectId
                 }
             },
@@ -288,7 +288,7 @@ export const onExport = (
         return {
             "task": {
                 id: "Id_" + node.id.replaceAll("-", ""),
-                name: "Info: " + infoNodeData.infoText,
+                name: infoNodeData.infoText,
                 children: [
                     ...getIncomingEdgeChildren(edges, node),
                     ...getOutgoingEdgeChildren(edges, node)
@@ -370,7 +370,7 @@ export const onExport = (
             {
                 "dataObjectReference": {
                     id: dataObjectReferenceId,
-                    name: JSON.stringify(challengeNodeData).replaceAll("\"", "&quot;"),
+                    name: JSON.stringify(challengeNodeData),
                     dataObjectRef: dataObjectId
                 }
             },
@@ -421,7 +421,7 @@ export const onExport = (
             {
                 "dataObjectReference": {
                     id: dataObjectReferenceId,
-                    name: JSON.stringify(gamificationEventNodeData).replaceAll("\"", "&quot;"),
+                    name: JSON.stringify(gamificationEventNodeData),
                     dataObjectRef: dataObjectId
                 }
             },
@@ -629,7 +629,7 @@ function jsonToPrettyXml(json: any, spacing: string = ""): string {
                 // Check if the property is a property of the value and not "children"
                 if (value.hasOwnProperty(property) && property !== 'children') {
                     // Add the property as an XML attribute to the element
-                    xml += ` ${property}="${value[property]}"`;
+                    xml += ` ${property}="${escapeXml(String(value[property]))}"`;
                 }
             }
 
@@ -660,3 +660,13 @@ function jsonToPrettyXml(json: any, spacing: string = ""): string {
     // Return the generated XML code
     return xml;
 }
+
+function escapeXml(unsafe: string): string {
+    console.log(unsafe)
+    return unsafe.replace(/&/g, '&amp;')
+        .replace(/</g, '&lt;')
+        .replace(/>/g, '&gt;')
+        .replace(/'/g, '&apos;')
+        .replace(/"/g, '&quot;');
+}
+
