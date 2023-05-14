@@ -140,9 +140,16 @@ function DragAndDropFlow() {
         setIsDragging(false)
     }, [])
 
+    // TODO Start und Endknoten nie zu einer Challenge hinzufügen
+
+    // Update which nodes belong to a challenge
     useEffect(() => {
         if (!isDragging) {
-            nodes.filter((node: Node) => node.type !== NodeTypes.CHALLENGE_NODE).forEach((node: Node) => {
+            nodes.filter((node: Node) =>
+                node.type !== NodeTypes.CHALLENGE_NODE &&
+                node.type !== NodeTypes.START_NODE &&
+                node.type !== NodeTypes.END_NODE
+            ).forEach((node: Node) => {
                 const intersectingChallenges = reactFlowInstance.getIntersectingNodes(node)
                     .filter((node) => node.type === NodeTypes.CHALLENGE_NODE)
                     .filter((node) => node.data.isResizing === false)
