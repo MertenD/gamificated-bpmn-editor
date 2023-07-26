@@ -1,4 +1,4 @@
-# GBPMN Editor
+# Gamificated BPMN Editor
 
 This repository contains a BPMN (Business Process Model and Notation) editor built using React, TypeScript, and [React Flow](https://reactflow.dev/). The editor is designed to create and edit BPMN diagrams, which contains gamification elements and can then be used with the [Gamificated BPMN Engine](https://github.com/MertenD/gamificated-bpmn-engine).
 
