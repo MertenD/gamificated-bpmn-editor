@@ -6,6 +6,8 @@ You can try the editor at [http://gbpmneditor.mertendieckmann.de/](http://gbpmne
 
 ## Overview
 
+![Overview](public/editor_complete_new.PNG)
+
 The BPMN Editor is a node-based editor that allows users to create and edit BPMN diagrams. The editor uses React Flow, a library for building node-based applications, to create a user-friendly interface for manipulating BPMN elements.
 
 The main entry point of the application is `src/App.tsx`, which sets up the React application and includes the main components.
